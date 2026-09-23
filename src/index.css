@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ewarn-blue: #1d4ed8;
+  --color-ewarn-dark: #0f172a;
+}
+
+body {
+  @apply bg-white text-slate-900 antialiased selection:bg-cyan-500 selection:text-white cursor-none;
+}
+
+/* Hide default cursor on interactive elements */
+a, button, input, [role="button"] {
+  cursor: none;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
