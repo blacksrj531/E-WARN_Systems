@@ -137,6 +137,11 @@ export const Navbar = () => {
 
           {isAuthenticated ? (
             <>
+              {user?.isAdmin && (
+                <Link to="/admin" className={`hidden lg:block text-xs font-mono font-bold tracking-widest uppercase transition-colors hover:underline underline-offset-4 ${scrolled ? 'text-rose-600 hover:text-rose-700' : 'text-rose-400 hover:text-rose-300'}`}>
+                  Admin Panel
+                </Link>
+              )}
               <Link to="/profile" className={`hidden lg:block text-xs font-mono font-bold tracking-widest uppercase transition-colors hover:underline underline-offset-4 ${scrolled ? 'text-slate-600 hover:text-cyan-600' : 'text-cyan-400 hover:text-cyan-300'}`}>
                 {user?.email?.split('@')[0]}
               </Link>

@@ -20,42 +20,66 @@ export const ProductDetailsPage = () => {
   const [ratingsExplainerOpen, setRatingsExplainerOpen] = useState(false);
   const [reportedReviews, setReportedReviews] = useState([]);
   const [translatedReviews, setTranslatedReviews] = useState([]);
+  const [localReviews, setLocalReviews] = useState(() => {
+    const allReviews = JSON.parse(localStorage.getItem('ewarn_reviews') || '[]');
+    return allReviews.filter(r => r.productId === product?.id || !r.productId);
+  });
+  const [isWritingReview, setIsWritingReview] = useState(false);
+  const [newReview, setNewReview] = useState({ rating: 0, title: '', text: '', photoUrl: null });
 
   // Frequently Bought Together Logic
   const suggestedProducts = PRODUCTS.filter(p => p.id !== product?.id).slice(0, 2);
   const boughtTogether = product ? [product, ...suggestedProducts] : [];
   const [checkedItems, setCheckedItems] = useState(boughtTogether.map(p => p.id));
 
+  const handleSubmitReview = () => {
+    const reviewData = {
+      ...newReview,
+      id: Date.now(),
+      productId: product.id,
+      user: JSON.parse(localStorage.getItem('ewarn_user'))?.email?.split('@')[0] || 'User',
+      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      verified: true,
+      translate: false
+    };
+    
+    // Save to global storage
+    const allReviews = JSON.parse(localStorage.getItem('ewarn_reviews') || '[]');
+    const updatedGlobal = [reviewData, ...allReviews];
+    localStorage.setItem('ewarn_reviews', JSON.stringify(updatedGlobal));
+    
+    // Update local view
+    setLocalReviews([reviewData, ...localReviews]);
+    setIsWritingReview(false);
+    setNewReview({ rating: 0, title: '', text: '', photoUrl: null });
+  };
+
   useEffect(() => {
     if (product) {
       setActiveImage(product.image);
       setQuantity(1);
       setCheckedItems([product.id, ...suggestedProducts.map(p => p.id)]);
+      
+      const allReviews = JSON.parse(localStorage.getItem('ewarn_reviews') || '[]');
+      setLocalReviews(allReviews.filter(r => r.productId === product.id || !r.productId));
     }
   }, [product]);
 
   if (!product) return <div className="pt-32 text-center text-slate-500 font-mono">PRODUCT NOT FOUND</div>;
 
   const images = product.images || [product.image];
-  
-  const MOCK_REVIEWS = [
-    { id: 1, user: "Arjun Mehta", rating: 5, title: "Exceptional build quality and reliability", date: "Reviewed in India on 12 October 2025", text: "This was exactly what I needed for my final year engineering project. The build quality is top-notch and it integrated perfectly with my microcontroller setup. Shipping was incredibly fast too. Highly recommended for any serious maker!", verified: true, translate: false },
-    { id: 2, user: "Elena Rostova", rating: 4, title: "Отличное соотношение цены и качества", englishTitle: "Excellent value for money", date: "Reviewed in Russia on 3 September 2025", text: "Работает стабильно, никаких проблем при установке не возникло. Немного греется при максимальной нагрузке, но в пределах нормы.", englishText: "Works stably, no problems arose during installation. It gets a little hot under maximum load, but within normal limits.", verified: true, translate: true },
-    { id: 3, user: "James Wilson", rating: 3, title: "Good, but has some minor issues", date: "Reviewed in the United States on 15 August 2025", text: "It works well for basic tasks, but the documentation is a bit lacking. Had to figure out the pinouts myself by searching forums.", verified: true, translate: false },
-    { id: 4, user: "Sophie Dubois", rating: 2, title: "Not as durable as expected", date: "Reviewed in France on 22 July 2025", text: "One of the connectors broke after a week of normal use. Disappointed considering the price. It still functions if I hold it at an angle.", verified: false, translate: false },
-    { id: 5, user: "Wei Chen", rating: 1, title: "Completely dead on arrival", date: "Reviewed in China on 5 June 2025", text: "Plugged it in exactly as specified and nothing happened. Total waste of money and time. Currently awaiting a refund.", verified: true, translate: false },
-    { id: 6, user: "Lucas Rojas", rating: 5, title: "Bien", englishTitle: "Good", date: "Reviewed in Mexico on 24 May 2025", text: "Muy bueno calidad precio, cambia los comicios muy suave. Lo recomiendo para todos los proyectos.", englishText: "Very good value for money, the gears shift very smoothly. I recommend it for all projects.", verified: true, translate: true }
-  ];
 
-  const totalReviews = MOCK_REVIEWS.length;
-  const averageRating = (MOCK_REVIEWS.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(1);
+  const totalReviews = localReviews.length;
+  const averageRating = totalReviews > 0 ? (localReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(1) : "0.0";
   
   const ratingCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-  MOCK_REVIEWS.forEach(r => ratingCounts[r.rating]++);
+  localReviews.forEach(r => {
+    if (ratingCounts[r.rating] !== undefined) ratingCounts[r.rating]++;
+  });
   
   const dynamicStats = [5, 4, 3, 2, 1].map(stars => ({
     stars,
-    pct: Math.round((ratingCounts[stars] / totalReviews) * 100)
+    pct: totalReviews > 0 ? Math.round((ratingCounts[stars] / totalReviews) * 100) : 0
   }));
 
   const handleProtectedAction = (action) => {
@@ -66,11 +90,23 @@ export const ProductDetailsPage = () => {
     }
   };
 
-  // Mock MRP and Discount logic based on the existing price
-  const priceNumber = parseInt(product.price.replace(/[^\d]/g, ''));
-  const discountPercent = (product.id * 7 % 30) + 15; // Generates a stable random discount between 15% and 44%
-  const mrpNumber = Math.round(priceNumber / (1 - discountPercent / 100));
-  const formattedMrp = `₹${mrpNumber.toLocaleString('en-IN')}`;
+  // MRP and Discount logic (Respects Admin's product.mrp if available)
+  const priceNumber = parseInt((product.price || '').replace(/[^\d]/g, '') || '0');
+  
+  let formattedMrp = product.mrp;
+  let discountPercent = 0;
+
+  if (formattedMrp) {
+    const mrpNumber = parseInt(formattedMrp.replace(/[^\d]/g, ''));
+    if (mrpNumber > priceNumber) {
+      discountPercent = Math.round(((mrpNumber - priceNumber) / mrpNumber) * 100);
+    }
+  } else {
+    // Fallback logic for legacy products without explicitly defined MRP
+    discountPercent = (product.id * 7 % 30) + 15; // Generates a stable random discount between 15% and 44%
+    const calculatedMrp = Math.round(priceNumber / (1 - discountPercent / 100));
+    formattedMrp = `₹${calculatedMrp.toLocaleString('en-IN')}`;
+  }
 
   return (
     <div className="pt-36 md:pt-40 pb-24 min-h-screen bg-white">
@@ -151,7 +187,7 @@ export const ProductDetailsPage = () => {
             {/* Pricing Section (Amazon / Flipkart Style) */}
             <div className="mb-8 pb-8 border-b border-gray-100">
               <div className="flex items-center gap-4 mb-2">
-                <span className="text-3xl font-black text-red-500">-{discountPercent}%</span>
+                {discountPercent > 0 && <span className="text-3xl font-black text-red-500">-{discountPercent}%</span>}
                 <span className="text-4xl font-black text-slate-900">{product.price}</span>
               </div>
               <div className="flex flex-col gap-1 text-sm">
@@ -398,6 +434,26 @@ export const ProductDetailsPage = () => {
 
           {/* Right Column: Summaries and Reviews */}
           <div>
+            {/* Review CTA */}
+            <div className="mb-10 p-6 bg-slate-50 border border-gray-200 rounded-2xl flex flex-col items-start gap-4">
+              <div>
+                <h3 className="font-bold text-slate-900 mb-1">Review this product</h3>
+                <p className="text-sm text-slate-600">Share your thoughts with other customers. Take a photo of how you used it in your project!</p>
+              </div>
+              <button 
+                onClick={() => {
+                  if(!isAuthenticated) {
+                    navigate('/login?redirect=/product/' + product.id);
+                  } else {
+                    setIsWritingReview(true);
+                  }
+                }}
+                className="bg-white border border-gray-300 hover:bg-slate-50 text-slate-900 font-bold px-6 py-2 rounded-xl transition-colors text-sm shadow-sm"
+              >
+                Write a customer review
+              </button>
+            </div>
+
             <h3 className="text-xl font-bold text-slate-900 mb-3">Customers say</h3>
             <p className="text-sm text-slate-700 leading-relaxed mb-1">
               Customers find the {product.category.toLowerCase()} operates exceptionally well and is easy to use and install, offering great value for money. The component integrates seamlessly into existing systems. Durability receives mixed feedback, with one user reporting connection drops during extreme load testing.
@@ -425,7 +481,8 @@ export const ProductDetailsPage = () => {
             
             <div className="flex flex-col gap-10">
               {(() => {
-                const filteredReviews = starFilter ? MOCK_REVIEWS.filter(r => r.rating === starFilter) : MOCK_REVIEWS;
+                const combinedReviews = localReviews;
+                const filteredReviews = starFilter ? combinedReviews.filter(r => r.rating === starFilter) : combinedReviews;
 
                 if (filteredReviews.length === 0) {
                   return <div className="text-slate-500 bg-slate-50 p-6 rounded-xl border border-gray-100 text-sm">No reviews match your selected filter.</div>;
@@ -438,10 +495,10 @@ export const ProductDetailsPage = () => {
                   return (
                     <div key={review.id} className="flex flex-col gap-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 shrink-0">
-                          <User className="w-5 h-5" />
+                        <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 shrink-0 uppercase font-bold text-sm">
+                          {review.user?.[0] || 'U'}
                         </div>
-                        <span className="text-sm text-slate-900">{review.user}</span>
+                        <span className="text-sm text-slate-900 font-bold">{review.user}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="flex text-yellow-400">
@@ -451,9 +508,16 @@ export const ProductDetailsPage = () => {
                       </div>
                       <div className="text-xs text-slate-500">{review.date}</div>
                       {review.verified && <div className="text-xs font-bold text-orange-600 mt-0.5">Verified Purchase</div>}
-                      <p className="text-sm text-slate-800 leading-relaxed mt-2">
+                      <p className="text-sm text-slate-800 leading-relaxed mt-2 whitespace-pre-wrap">
                         {isTranslated ? review.englishText : review.text}
                       </p>
+                      
+                      {review.photoUrl && (
+                        <div className="mt-3 w-32 h-32 rounded-xl overflow-hidden border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity">
+                          <img src={review.photoUrl} alt="User submission" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      
                       <div className="flex items-center gap-4 mt-2">
                         <button 
                           onClick={() => setReportedReviews(prev => prev.includes(review.id) ? prev.filter(id => id !== review.id) : [...prev, review.id])}
@@ -479,6 +543,114 @@ export const ProductDetailsPage = () => {
         </div>
 
       </div>
+
+      {/* Review Modal */}
+      <AnimatePresence>
+        {isWritingReview && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+              onClick={() => setIsWritingReview(false)}
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 md:p-8"
+            >
+              <h2 className="text-2xl font-black text-slate-900 mb-6">Write a Review</h2>
+              
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-slate-900 mb-2">Overall rating</label>
+                  <div className="flex gap-2 text-yellow-400">
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <Star 
+                        key={star} 
+                        onClick={() => setNewReview(prev => ({...prev, rating: star}))}
+                        className={`w-8 h-8 cursor-pointer transition-transform hover:scale-110 ${star <= newReview.rating ? 'fill-current' : 'text-gray-200'}`} 
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-900 mb-2">Add a headline</label>
+                  <input 
+                    type="text" 
+                    placeholder="What's most important to know?"
+                    value={newReview.title}
+                    onChange={e => setNewReview({...newReview, title: e.target.value})}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none" 
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-900 mb-2">Add a photo (Optional)</label>
+                  <p className="text-xs text-slate-500 mb-2">Showcase your project! You can use your camera or upload a file.</p>
+                  <div className="flex items-center gap-4">
+                    <label className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold cursor-pointer transition-colors border border-gray-200">
+                      Upload / Take Photo
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        capture="environment"
+                        className="hidden" 
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              setNewReview({...newReview, photoUrl: reader.result});
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
+                    {newReview.photoUrl && (
+                      <div className="w-12 h-12 rounded bg-slate-100 border border-gray-200 overflow-hidden relative group">
+                        <img src={newReview.photoUrl} alt="Preview" className="w-full h-full object-cover" />
+                        <button 
+                          onClick={() => setNewReview({...newReview, photoUrl: null})}
+                          className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-900 mb-2">Add a written review</label>
+                  <textarea 
+                    rows={4}
+                    placeholder="What did you like or dislike? What did you use this product for?"
+                    value={newReview.text}
+                    onChange={e => setNewReview({...newReview, text: e.target.value})}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none resize-none" 
+                  />
+                </div>
+
+                <div className="flex gap-4 pt-4 border-t border-gray-100">
+                  <button onClick={() => setIsWritingReview(false)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold py-3 rounded-xl transition-colors">
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={handleSubmitReview}
+                    disabled={!newReview.rating || !newReview.title || !newReview.text}
+                    className="flex-1 bg-cyan-500 hover:bg-cyan-400 disabled:bg-cyan-200 disabled:cursor-not-allowed text-slate-950 font-bold py-3 rounded-xl transition-colors"
+                  >
+                    Submit Review
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

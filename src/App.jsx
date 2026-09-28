@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
@@ -23,8 +24,22 @@ import { TestimonialsPage } from './pages/TestimonialsPage';
 import { ServicesPage } from './pages/ServicesPage';
 import { ITServicePage } from './pages/ITServicePage';
 import { ProductDevPage } from './pages/ProductDevPage';
+import { TrainingPage } from './pages/TrainingPage';
+import { AdminDashboardPage } from './pages/AdminDashboardPage';
+import { PRODUCTS } from './data/products';
+import { INITIAL_REVIEWS } from './data/reviews';
 
 function App() {
+  // Initialize global products and reviews for Admin to edit
+  useEffect(() => {
+    if (!localStorage.getItem('ewarn_products')) {
+      localStorage.setItem('ewarn_products', JSON.stringify(PRODUCTS));
+    }
+    if (!localStorage.getItem('ewarn_reviews')) {
+      localStorage.setItem('ewarn_reviews', JSON.stringify(INITIAL_REVIEWS));
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <CartProvider>
@@ -54,6 +69,8 @@ function App() {
                 <Route path="/services" element={<ServicesPage />} />
                 <Route path="/services/it" element={<ITServicePage />} />
                 <Route path="/services/product-development" element={<ProductDevPage />} />
+                <Route path="/services/training" element={<TrainingPage />} />
+                <Route path="/admin" element={<AdminDashboardPage />} />
               </Routes>
               
               <Footer />

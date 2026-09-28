@@ -161,6 +161,7 @@ export const ServicesPage = () => {
                             e.stopPropagation();
                             if (service.id === 'it-solution') navigate('/services/it');
                             if (service.id === 'product-development') navigate('/services/product-development');
+                            if (service.id === 'training') navigate('/services/training');
                           }}
                           className="inline-flex items-center gap-2 bg-white hover:bg-cyan-50 text-slate-900 font-black px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl transition-all shadow-xl hover:shadow-cyan-500/20 active:scale-95 group/btn"
                         >

@@ -1,4 +1,4 @@
-export const PRODUCTS = [
+const INITIAL_PRODUCTS = [
   { 
     id: 1, name: "ESP32 Development Board", category: "Microprocessors", price: "₹1,099", badge: "Best Seller", 
     image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800",
@@ -67,3 +67,6 @@ export const PRODUCTS = [
     ]
   },
 ];
+
+const savedProducts = localStorage.getItem('ewarn_products');
+export const PRODUCTS = savedProducts ? JSON.parse(savedProducts) : INITIAL_PRODUCTS;
