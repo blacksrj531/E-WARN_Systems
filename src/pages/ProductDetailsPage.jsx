@@ -259,7 +259,7 @@ export const ProductDetailsPage = () => {
                   <CreditCard className="w-5 h-5" /> BUY NOW
                 </button>
                 
-                <button onClick={handleWishlistToggle} className="w-16 relative flex shrink-0 items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-colors border border-rose-100 hover:border-rose-500 " title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}> {isBursting && [...Array(8)].map((_, i) => (<motion.div key={`burst-${i}`} initial={{ x: 0, y: 0, scale: 1, opacity: 1 }} animate={{ x: Math.cos(i * 45 * Math.PI / 180) * 35, y: Math.sin(i * 45 * Math.PI / 180) * 35, scale: 0.5, opacity: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} className="absolute w-2 h-2 bg-rose-500 rounded-full" style={{ left: "calc(50% - 4px)", top: "calc(50% - 4px)" }} />))} <Heart className={`w-6 h-6 ${isInWishlist && !isBursting ? "fill-current text-rose-500" : ""}`} /> </button>
+                <button onClick={handleWishlistToggle} className="w-16 relative flex shrink-0 items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-colors border border-rose-100 hover:border-rose-500 " title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}> {isBursting && [...Array(8)].map((_, i) => (<motion.div key={`burst-${i}`} initial={{ x: 0, y: 0, scale: 1, opacity: 1 }} animate={{ x: Math.cos(i * 45 * Math.PI / 180) * 35, y: Math.sin(i * 45 * Math.PI / 180) * 35, scale: 0.5, opacity: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} className="absolute w-2 h-2 bg-rose-500 rounded-full" style={{ left: "calc(50% - 4px)", top: "calc(50% - 4px)" }} />))} <Heart className={`w-6 h-6 ${isInWishlist && !isBursting ? "fill-current" : ""}`} /> </button>
               </div>
 
               <button 
@@ -674,6 +674,7 @@ export const ProductDetailsPage = () => {
     </div>
   );
 };
+
 
 
 
