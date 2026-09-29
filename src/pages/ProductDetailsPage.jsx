@@ -20,6 +20,18 @@ export const ProductDetailsPage = () => {
   const { toggleWishlist, wishlistItems } = useWishlist();
   const isInWishlist = wishlistItems.some(item => item.id === product?.id);
 
+  const [isBursting, setIsBursting] = useState(false);
+  const handleWishlistToggle = (e) => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    if (isInWishlist) {
+      setIsBursting(true);
+      setTimeout(() => setIsBursting(false), 600);
+    }
+    toggleWishlist(product, e);
+  };
   const [activeImage, setActiveImage] = useState(product?.image);
   const [quantity, setQuantity] = useState(1);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
@@ -247,13 +259,7 @@ export const ProductDetailsPage = () => {
                   <CreditCard className="w-5 h-5" /> BUY NOW
                 </button>
                 
-                <button 
-                  onClick={(e) => { if (!isAuthenticated) { navigate('/login'); } else { toggleWishlist(product, e); } }} 
-                  className="w-16 flex shrink-0 items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all border border-rose-100 hover:border-rose-500 hover:shadow-lg hover:-translate-y-1 group"
-                  title="Add to Wishlist"
-                >
-                  <Heart className={`w-6 h-6 group-hover:scale-110 transition-transform ${isInWishlist ? "fill-current text-rose-500" : ""}`} />
-                </button>
+                <button onClick={handleWishlistToggle} className="w-16 relative flex shrink-0 items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all border border-rose-100 hover:border-rose-500 hover:shadow-lg hover:-translate-y-1 group" title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}> {isBursting && [...Array(8)].map((_, i) => (<motion.div key={`burst-${i}`} initial={{ x: 0, y: 0, scale: 1, opacity: 1 }} animate={{ x: Math.cos(i * 45 * Math.PI / 180) * 35, y: Math.sin(i * 45 * Math.PI / 180) * 35, scale: 0.5, opacity: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} className="absolute w-2 h-2 bg-rose-500 rounded-full" style={{ left: "calc(50% - 4px)", top: "calc(50% - 4px)" }} />))} <Heart className={`w-6 h-6 group-hover:scale-110 transition-transform ${isInWishlist && !isBursting ? "fill-current text-rose-500" : ""}`} /> </button>
               </div>
 
               <button 
@@ -668,6 +674,8 @@ export const ProductDetailsPage = () => {
     </div>
   );
 };
+
+
 
 
 
