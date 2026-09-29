@@ -9,7 +9,11 @@ import { useCart } from '../context/CartContext';
 export const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = PRODUCTS.find(p => p.id === parseInt(id));
+  
+  // Dynamically load products from localStorage to reflect Admin changes instantly
+  const allProducts = JSON.parse(localStorage.getItem('ewarn_products')) || PRODUCTS;
+  const product = allProducts.find(p => p.id === parseInt(id));
+  
   const { isAuthenticated } = useAuth();
   const { addToCart } = useCart();
 
@@ -28,7 +32,7 @@ export const ProductDetailsPage = () => {
   const [newReview, setNewReview] = useState({ rating: 0, title: '', text: '', photoUrl: null });
 
   // Frequently Bought Together Logic
-  const suggestedProducts = PRODUCTS.filter(p => p.id !== product?.id).slice(0, 2);
+  const suggestedProducts = allProducts.filter(p => p.id !== product?.id).slice(0, 2);
   const boughtTogether = product ? [product, ...suggestedProducts] : [];
   const [checkedItems, setCheckedItems] = useState(boughtTogether.map(p => p.id));
 
