@@ -252,7 +252,7 @@ export const ProductDetailsPage = () => {
                   className="w-16 flex shrink-0 items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all border border-rose-100 hover:border-rose-500 hover:shadow-lg hover:-translate-y-1 group"
                   title="Add to Wishlist"
                 >
-                  <Heart className={w-6 h-6 group-hover:scale-110 transition-transform } />
+                  <Heart className={`w-6 h-6 group-hover:scale-110 transition-transform ${isInWishlist ? "fill-current text-rose-500" : ""}`} />
                 </button>
               </div>
 
@@ -668,6 +668,7 @@ export const ProductDetailsPage = () => {
     </div>
   );
 };
+
 
 
 
