@@ -21,6 +21,15 @@ export const ProductDetailsPage = () => {
   const isInWishlist = wishlistItems.some(item => item.id === product?.id);
 
   const [isBursting, setIsBursting] = useState(false);
+  const handleBuyNow = () => {
+    if (!isAuthenticated) {
+      navigate('/login?redirect=/payment');
+      return;
+    }
+    addToCart(product, quantity);
+    navigate('/payment');
+  };
+
   const handleWishlistToggle = (e) => {
     if (!isAuthenticated) {
       navigate('/login');
@@ -252,7 +261,7 @@ export const ProductDetailsPage = () => {
             <div className="flex flex-col gap-4 mb-10">
               <div className="flex gap-4">
                 <button 
-                  onClick={() => handleProtectedAction('Buy Now')} 
+                  onClick={handleBuyNow} 
                   disabled={product.stock === 0}
                   className={`flex-1 text-white py-4 rounded-xl font-black transition-colors flex items-center justify-center gap-3 ${product.stock === 0 ? 'bg-slate-300 cursor-not-allowed opacity-50 grayscale' : 'bg-slate-900 hover:bg-black shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1'}`}
                 >
@@ -674,6 +683,7 @@ export const ProductDetailsPage = () => {
     </div>
   );
 };
+
 
 
 
