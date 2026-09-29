@@ -5,6 +5,7 @@ import { ShoppingBag, ArrowLeft, ShieldCheck, Truck, Zap, CreditCard, Heart, Sta
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 
 export const ProductDetailsPage = () => {
   const { id } = useParams();
@@ -16,6 +17,7 @@ export const ProductDetailsPage = () => {
   
   const { isAuthenticated } = useAuth();
   const { addToCart } = useCart();
+  const { addToWishlist } = useWishlist();
 
   const [activeImage, setActiveImage] = useState(product?.image);
   const [quantity, setQuantity] = useState(1);
@@ -88,7 +90,12 @@ export const ProductDetailsPage = () => {
 
   const handleProtectedAction = (action) => {
     if (!isAuthenticated) {
-      navigate('/signup');
+      navigate('/login?redirect=/wishlist');
+      return;
+    }
+    if (action === 'Wishlist') {
+      addToWishlist(product);
+      alert(`Added ${product.name} to your Wishlist!`);
     } else {
       alert(`Successfully processed ${action} for ${product.name}!`);
     }
@@ -660,4 +667,8 @@ export const ProductDetailsPage = () => {
     </div>
   );
 };
+
+
+
+
 
