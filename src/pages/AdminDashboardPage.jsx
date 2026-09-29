@@ -216,6 +216,7 @@ const AdminProducts = () => {
       category: PRODUCT_CATEGORIES[0],
       price: '',
       mrp: '',
+      stock: 10,
       image: '',
       images: [],
       badge: ''
@@ -274,7 +275,7 @@ const AdminProducts = () => {
   const renderEditForm = () => (
     <div className="flex-1 space-y-4 bg-white p-5 rounded-xl border border-cyan-200 shadow-sm relative">
       <h3 className="font-black text-slate-900 text-lg mb-4">{editingId === 'new' ? 'Create New Product' : 'Edit Product'}</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <div>
           <label className="text-xs font-bold text-slate-500 uppercase">Product Name</label>
           <input 
@@ -422,7 +423,8 @@ const AdminProducts = () => {
                     <h3 className="font-bold text-slate-900">{product.name}</h3>
                     <div className="flex gap-2 items-center mt-0.5">
                       <span className="text-xs font-bold text-slate-500 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded">{product.category}</span>
-                      <span className="text-xs text-slate-400 font-medium">{product.images?.length || 1} image(s)</span>
+                      
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded ${product.stock === 0 ? "bg-rose-100 text-rose-600" : "bg-emerald-100 text-emerald-600"}`}>{product.stock === 0 ? "Out of Stock" : `Stock: ${product.stock ?? 10}`}</span>
                     </div>
                     <p className="text-lg font-black text-cyan-700 mt-2">{product.price}</p>
                   </div>
@@ -509,3 +511,5 @@ const AdminReviews = () => {
     </div>
   );
 };
+
+

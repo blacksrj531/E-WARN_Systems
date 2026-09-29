@@ -33,7 +33,7 @@ export const ProductGrid = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="group cursor-pointer flex flex-col"
+              className={`group cursor-pointer flex flex-col ${product.stock === 0 ? 'opacity-60 grayscale' : ''}`}
               onClick={() => navigate(`/product/${product.id}`)}
             >
               {/* Image Container */}
@@ -43,24 +43,30 @@ export const ProductGrid = () => {
                   alt={product.name}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] mix-blend-multiply opacity-80"
                 />
-                {product.badge && (
+                {product.stock === 0 ? (
+                  <span className="absolute top-4 left-4 bg-red-600/90 backdrop-blur text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-sm">
+                    Out of Stock
+                  </span>
+                ) : product.badge && (
                   <span className="absolute top-4 left-4 bg-white/90 backdrop-blur text-ewarn-dark text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-sm">
                     {product.badge}
                   </span>
                 )}
                 
                 {/* Hover Add to Cart Button */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out">
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addToCart(product, 1, e);
-                    }}
-                    className="bg-ewarn-dark text-white px-6 py-2.5 rounded-full text-sm font-medium flex items-center gap-2 shadow-lg shadow-black/20 hover:scale-105 transition-transform"
-                  >
-                    <ShoppingBag className="w-4 h-4" /> Add to Cart
-                  </button>
-                </div>
+                {product.stock !== 0 && (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product, 1, e);
+                      }}
+                      className="bg-ewarn-dark text-white px-6 py-2.5 rounded-full text-sm font-medium flex items-center gap-2 shadow-lg shadow-black/20 hover:scale-105 transition-transform"
+                    >
+                      <ShoppingBag className="w-4 h-4" /> Add to Cart
+                    </button>
+                  </div>
+                )}
               </div>
               
               {/* Product Info */}

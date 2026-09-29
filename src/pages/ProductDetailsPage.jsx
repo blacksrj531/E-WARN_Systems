@@ -188,7 +188,7 @@ export const ProductDetailsPage = () => {
               <span className="text-sm text-cyan-600 hover:text-cyan-700 cursor-pointer underline decoration-cyan-200 underline-offset-4">({totalReviews.toLocaleString()} verified ratings)</span>
             </div>
 
-            {/* Pricing Section (Amazon / Flipkart Style) */}
+            {/* Pricing Section (Amazon / Flipkart Style) */}{product.stock === 0 ? (<div className="mb-8 pb-8 border-b border-gray-100"><div className="text-3xl font-black text-rose-500 bg-rose-50 px-6 py-4 rounded-xl border border-rose-100 inline-block">OUT OF STOCK</div><p className="text-sm text-gray-500 font-medium mt-3">This item is currently unavailable.</p></div>) : (
             <div className="mb-8 pb-8 border-b border-gray-100">
               <div className="flex items-center gap-4 mb-2">
                 {discountPercent > 0 && <span className="text-3xl font-black text-red-500">-{discountPercent}%</span>}
@@ -198,15 +198,13 @@ export const ProductDetailsPage = () => {
                 <div className="text-slate-500 font-bold">
                   M.R.P: <span className="line-through decoration-slate-400">{formattedMrp}</span>
                 </div>
-                <div className="text-xs text-slate-400 font-bold tracking-wide uppercase">Inclusive of all taxes</div>
-              </div>
-            </div>
+                <div className="text-xs text-slate-400 font-bold tracking-wide uppercase">Inclusive of all taxes</div></div></div>)}
             
             <p className="text-gray-500 text-lg leading-relaxed mb-8">
               A high-performance {product.category.toLowerCase()} component perfect for your next electronic prototyping project. Manufactured to the highest standards with strict quality assurance, this module guarantees precision and reliability within the EWARN ecosystem.
             </p>
 
-            {/* Quantity Selector */}
+            {/* Quantity Selector */}{product.stock !== 0 && (
             <div className="flex items-center gap-4 mb-10">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Quantity:</span>
               <div className="flex items-center border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
@@ -224,12 +222,7 @@ export const ProductDetailsPage = () => {
                   className="p-3 bg-slate-50 hover:bg-gray-100 text-slate-500 hover:text-cyan-600 transition-colors"
                 >
                   <Plus className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-4 mb-10">
+                </button></div></div>)}{/* Action Buttons */}<div className="flex flex-col gap-4 mb-10">{product.stock === 0 ? (<button disabled className="w-full bg-gray-200 text-gray-400 py-4 rounded-xl font-black cursor-not-allowed">OUT OF STOCK</button>) : (
               <div className="flex gap-4">
                 <button 
                   onClick={() => handleProtectedAction('Buy Now')} 
@@ -251,9 +244,7 @@ export const ProductDetailsPage = () => {
                 onClick={(e) => addToCart(product, quantity, e)}
                 className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 py-4 rounded-xl font-black transition-all shadow-[0_8px_30px_rgba(34,211,238,0.2)] hover:shadow-[0_8px_40px_rgba(34,211,238,0.4)] hover:-translate-y-1 flex items-center justify-center gap-3"
               >
-                <ShoppingBag className="w-6 h-6" /> ADD TO CART
-              </button>
-            </div>
+                <ShoppingBag className="w-6 h-6" /> ADD TO CART</button>)}</div>
 
             {/* Feature Badges */}
             <div className="flex justify-between items-start gap-2 pt-8 border-t border-gray-100">
@@ -658,3 +649,4 @@ export const ProductDetailsPage = () => {
     </div>
   );
 };
+
