@@ -175,7 +175,7 @@ export const ProductDetailsPage = () => {
                   <button 
                     key={idx}
                     onClick={() => setActiveImage(img)}
-                    className={`w-20 h-20 shrink-0 rounded-2xl border-2 flex items-center justify-center bg-slate-50 overflow-hidden transition-all ${
+                    className={`w-20 h-20 shrink-0 rounded-2xl border-2 flex items-center justify-center bg-slate-50 overflow-hidden transition-colors ${
                       activeImage === img 
                         ? 'border-cyan-500 shadow-[0_0_15px_rgba(34,211,238,0.2)] scale-105' 
                         : 'border-transparent hover:border-gray-200 opacity-70 hover:opacity-100'
@@ -254,18 +254,18 @@ export const ProductDetailsPage = () => {
                 <button 
                   onClick={() => handleProtectedAction('Buy Now')} 
                   disabled={product.stock === 0}
-                  className={`flex-1 text-white py-4 rounded-xl font-black transition-all flex items-center justify-center gap-3 ${product.stock === 0 ? 'bg-slate-300 cursor-not-allowed opacity-50 grayscale' : 'bg-slate-900 hover:bg-black shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1'}`}
+                  className={`flex-1 text-white py-4 rounded-xl font-black transition-colors flex items-center justify-center gap-3 ${product.stock === 0 ? 'bg-slate-300 cursor-not-allowed opacity-50 grayscale' : 'bg-slate-900 hover:bg-black shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1'}`}
                 >
                   <CreditCard className="w-5 h-5" /> BUY NOW
                 </button>
                 
-                <button onClick={handleWishlistToggle} className="w-16 relative flex shrink-0 items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all border border-rose-100 hover:border-rose-500 hover:shadow-lg hover:-translate-y-1 group" title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}> {isBursting && [...Array(8)].map((_, i) => (<motion.div key={`burst-${i}`} initial={{ x: 0, y: 0, scale: 1, opacity: 1 }} animate={{ x: Math.cos(i * 45 * Math.PI / 180) * 35, y: Math.sin(i * 45 * Math.PI / 180) * 35, scale: 0.5, opacity: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} className="absolute w-2 h-2 bg-rose-500 rounded-full" style={{ left: "calc(50% - 4px)", top: "calc(50% - 4px)" }} />))} <Heart className={`w-6 h-6 group-hover:scale-110 transition-transform ${isInWishlist && !isBursting ? "fill-current text-rose-500" : ""}`} /> </button>
+                <button onClick={handleWishlistToggle} className="w-16 relative flex shrink-0 items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-colors border border-rose-100 hover:border-rose-500 " title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}> {isBursting && [...Array(8)].map((_, i) => (<motion.div key={`burst-${i}`} initial={{ x: 0, y: 0, scale: 1, opacity: 1 }} animate={{ x: Math.cos(i * 45 * Math.PI / 180) * 35, y: Math.sin(i * 45 * Math.PI / 180) * 35, scale: 0.5, opacity: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} className="absolute w-2 h-2 bg-rose-500 rounded-full" style={{ left: "calc(50% - 4px)", top: "calc(50% - 4px)" }} />))} <Heart className={`w-6 h-6 ${isInWishlist && !isBursting ? "fill-current text-rose-500" : ""}`} /> </button>
               </div>
 
               <button 
                 onClick={(e) => addToCart(product, quantity, e)}
                 disabled={product.stock === 0}
-                className={`w-full py-4 rounded-xl font-black transition-all flex items-center justify-center gap-3 ${product.stock === 0 ? 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-50 grayscale' : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-[0_8px_30px_rgba(34,211,238,0.2)] hover:shadow-[0_8px_40px_rgba(34,211,238,0.4)] hover:-translate-y-1'}`}
+                className={`w-full py-4 rounded-xl font-black transition-colors flex items-center justify-center gap-3 ${product.stock === 0 ? 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-50 grayscale' : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-[0_8px_30px_rgba(34,211,238,0.2)] hover:shadow-[0_8px_40px_rgba(34,211,238,0.4)] hover:-translate-y-1'}`}
               >
                 <ShoppingBag className="w-6 h-6" /> {product.stock === 0 ? 'OUT OF STOCK' : 'ADD TO CART'}
               </button>
@@ -372,7 +372,7 @@ export const ProductDetailsPage = () => {
                         .filter(p => checkedItems.includes(p.id))
                         .forEach(item => addToCart(item, 1, e));
                     }}
-                    className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 py-3 rounded-xl font-black transition-all shadow-[0_4px_15px_rgba(34,211,238,0.3)] hover:shadow-[0_4px_20px_rgba(34,211,238,0.5)] hover:-translate-y-0.5 disabled:opacity-50 disabled:shadow-none disabled:translate-y-0 disabled:cursor-not-allowed"
+                    className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 py-3 rounded-xl font-black transition-colors shadow-[0_4px_15px_rgba(34,211,238,0.3)] hover:shadow-[0_4px_20px_rgba(34,211,238,0.5)] hover:-translate-y-0.5 disabled:opacity-50 disabled:shadow-none disabled:translate-y-0 disabled:cursor-not-allowed"
                   >
                     Add {checkedItems.length > 0 ? (checkedItems.length === 3 ? 'all 3' : `${checkedItems.length}`) : ''} to Cart
                   </button>
@@ -674,6 +674,7 @@ export const ProductDetailsPage = () => {
     </div>
   );
 };
+
 
 
 
