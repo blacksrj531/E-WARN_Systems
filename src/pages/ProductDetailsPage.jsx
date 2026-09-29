@@ -67,7 +67,7 @@ export const ProductDetailsPage = () => {
       const allReviews = JSON.parse(localStorage.getItem('ewarn_reviews') || '[]');
       setLocalReviews(allReviews.filter(r => r.productId === product.id || !r.productId));
     }
-  }, [product]);
+  }, [product?.id, product?.image]);
 
   if (!product) return <div className="pt-32 text-center text-slate-500 font-mono">PRODUCT NOT FOUND</div>;
 

@@ -22,6 +22,8 @@ export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
+  const isDarkHeroPage = location.pathname === '/' || location.pathname === '/about';
+  const isScrolled = scrolled || !isDarkHeroPage;
   
   const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -45,7 +47,7 @@ export const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'top-0 px-0' : 'top-4 md:top-6 px-4 md:px-6'}`}
+      className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'top-0 px-0' : 'top-4 md:top-6 px-4 md:px-6'}`}
     >
       <nav 
         className={`mx-auto flex justify-between items-center transition-all duration-500 ${
@@ -56,7 +58,7 @@ export const Navbar = () => {
       >
         
         {/* Logo - flex-shrink-0 and w-auto ensure it NEVER crops */}
-        <Link to="/" className={`flex items-center group transition-colors flex-shrink-0 ${scrolled ? '' : 'p-1.5 rounded-lg bg-white border border-white/20 shadow-sm'}`}>
+        <Link to="/" className={`flex items-center group transition-colors flex-shrink-0 ${isScrolled ? '' : 'p-1.5 rounded-lg bg-white border border-white/20 shadow-sm'}`}>
           <img 
             src="/logo.png" 
             alt="eWarn Logo" 
@@ -65,11 +67,11 @@ export const Navbar = () => {
         </Link>
 
         {/* Desktop Links (Hidden on tablet/mobile) */}
-        <div className={`hidden lg:flex items-center gap-10 text-sm font-bold tracking-wide transition-colors ${scrolled ? 'text-slate-600' : 'text-slate-200'}`}>
-          <Link to="/products" className={`transition-colors ${scrolled ? 'hover:text-ewarn-dark' : 'hover:text-white drop-shadow-md'}`}>Products</Link>
-          <Link to="/about" className={`transition-colors ${scrolled ? 'hover:text-ewarn-dark' : 'hover:text-white drop-shadow-md'}`}>About Us</Link>
-          <Link to="/testimonials" className={`transition-colors ${scrolled ? 'hover:text-ewarn-dark' : 'hover:text-white drop-shadow-md'}`}>Testimonials</Link>
-          <Link to="/services" className={`transition-colors ${scrolled ? 'hover:text-ewarn-dark' : 'hover:text-white drop-shadow-md'}`}>Services</Link>
+        <div className={`hidden lg:flex items-center gap-10 text-sm font-bold tracking-wide transition-colors ${isScrolled ? 'text-slate-600' : 'text-slate-200'}`}>
+          <Link to="/products" className={`transition-colors ${isScrolled ? 'hover:text-ewarn-dark' : 'hover:text-white drop-shadow-md'}`}>Products</Link>
+          <Link to="/about" className={`transition-colors ${isScrolled ? 'hover:text-ewarn-dark' : 'hover:text-white drop-shadow-md'}`}>About Us</Link>
+          <Link to="/testimonials" className={`transition-colors ${isScrolled ? 'hover:text-ewarn-dark' : 'hover:text-white drop-shadow-md'}`}>Testimonials</Link>
+          <Link to="/services" className={`transition-colors ${isScrolled ? 'hover:text-ewarn-dark' : 'hover:text-white drop-shadow-md'}`}>Services</Link>
         </div>
 
         {/* Icons & CTA Buttons */}
@@ -83,7 +85,7 @@ export const Navbar = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -15, scale: 0.8 }}
                 onClick={() => setIsSearchOpen(true)}
-                className={`transition-colors flex items-center justify-center ${scrolled ? 'text-slate-500 hover:text-ewarn-dark' : 'text-slate-300 hover:text-white'}`}
+                className={`transition-colors flex items-center justify-center ${isScrolled ? 'text-slate-500 hover:text-ewarn-dark' : 'text-slate-300 hover:text-white'}`}
               >
                 <Search className="w-5 h-5" />
               </motion.button>
@@ -95,7 +97,7 @@ export const Navbar = () => {
               if (isAuthenticated) navigate('/wishlist');
               else navigate('/login?redirect=/wishlist');
             }}
-            className={`transition-colors relative group cursor-pointer ${scrolled ? 'text-slate-500 hover:text-ewarn-dark' : 'text-slate-300 hover:text-white'}`}
+            className={`transition-colors relative group cursor-pointer ${isScrolled ? 'text-slate-500 hover:text-ewarn-dark' : 'text-slate-300 hover:text-white'}`}
           >
             <Heart className="w-5 h-5" />
             <AnimatePresence mode="popLayout">
@@ -104,7 +106,7 @@ export const Navbar = () => {
                   key={wishlistItems.length}
                   initial={{ scale: 0.5, y: 5 }}
                   animate={{ scale: 1, y: 0 }}
-                  className={`absolute -top-1.5 -right-1.5 text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center group-hover:scale-110 transition-transform ${scrolled ? 'bg-red-500 text-white' : 'bg-red-400 text-white'}`}
+                  className={`absolute -top-1.5 -right-1.5 text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center group-hover:scale-110 transition-transform ${isScrolled ? 'bg-red-500 text-white' : 'bg-red-400 text-white'}`}
                 >
                   {wishlistItems.length}
                 </motion.span>
@@ -115,7 +117,7 @@ export const Navbar = () => {
           <button 
             id="navbar-cart-icon"
             onClick={() => setIsCartOpen(true)}
-            className={`transition-colors relative group mr-1 md:mr-2 cursor-pointer ${scrolled ? 'text-slate-500 hover:text-ewarn-dark' : 'text-slate-300 hover:text-white'}`}
+            className={`transition-colors relative group mr-1 md:mr-2 cursor-pointer ${isScrolled ? 'text-slate-500 hover:text-ewarn-dark' : 'text-slate-300 hover:text-white'}`}
           >
             <ShoppingBag className="w-5 h-5" />
             <AnimatePresence mode="popLayout">
@@ -124,7 +126,7 @@ export const Navbar = () => {
                   key={totalCartItems}
                   initial={{ scale: 0.5, y: 5 }}
                   animate={{ scale: 1, y: 0 }}
-                  className={`absolute -top-1.5 -right-1.5 text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center group-hover:scale-110 transition-transform ${scrolled ? 'bg-ewarn-dark text-white' : 'bg-cyan-500 text-slate-900'}`}
+                  className={`absolute -top-1.5 -right-1.5 text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center group-hover:scale-110 transition-transform ${isScrolled ? 'bg-ewarn-dark text-white' : 'bg-cyan-500 text-slate-900'}`}
                 >
                   {totalCartItems}
                 </motion.span>
@@ -133,25 +135,25 @@ export const Navbar = () => {
           </button>
 
           {/* Desktop Only: Divider, Login, Signup */}
-          <div className={`hidden lg:block h-5 w-px transition-colors ${scrolled ? 'bg-gray-200' : 'bg-white/20'}`}></div>
+          <div className={`hidden lg:block h-5 w-px transition-colors ${isScrolled ? 'bg-gray-200' : 'bg-white/20'}`}></div>
 
           {isAuthenticated ? (
             <>
               {user?.isAdmin && (
-                <Link to="/admin" className={`hidden lg:block text-xs font-mono font-bold tracking-widest uppercase transition-colors hover:underline underline-offset-4 ${scrolled ? 'text-rose-600 hover:text-rose-700' : 'text-rose-400 hover:text-rose-300'}`}>
+                <Link to="/admin" className={`hidden lg:block text-xs font-mono font-bold tracking-widest uppercase transition-colors hover:underline underline-offset-4 ${isScrolled ? 'text-rose-600 hover:text-rose-700' : 'text-rose-400 hover:text-rose-300'}`}>
                   Admin Panel
                 </Link>
               )}
-              <Link to="/profile" className={`hidden lg:block text-xs font-mono font-bold tracking-widest uppercase transition-colors hover:underline underline-offset-4 ${scrolled ? 'text-slate-600 hover:text-cyan-600' : 'text-cyan-400 hover:text-cyan-300'}`}>
+              <Link to="/profile" className={`hidden lg:block text-xs font-mono font-bold tracking-widest uppercase transition-colors hover:underline underline-offset-4 ${isScrolled ? 'text-slate-600 hover:text-cyan-600' : 'text-cyan-400 hover:text-cyan-300'}`}>
                 {user?.email?.split('@')[0]}
               </Link>
-              <button onClick={logout} className={`hidden lg:block text-sm font-bold transition-colors ${scrolled ? 'text-slate-600 hover:text-red-500' : 'text-slate-200 hover:text-red-400 drop-shadow-md'}`}>
+              <button onClick={logout} className={`hidden lg:block text-sm font-bold transition-colors ${isScrolled ? 'text-slate-600 hover:text-red-500' : 'text-slate-200 hover:text-red-400 drop-shadow-md'}`}>
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className={`hidden lg:block text-sm font-bold transition-colors ${scrolled ? 'text-slate-600 hover:text-ewarn-dark' : 'text-slate-200 hover:text-white drop-shadow-md'}`}>
+              <Link to="/login" className={`hidden lg:block text-sm font-bold transition-colors ${isScrolled ? 'text-slate-600 hover:text-ewarn-dark' : 'text-slate-200 hover:text-white drop-shadow-md'}`}>
                 Login
               </Link>
               
@@ -162,7 +164,7 @@ export const Navbar = () => {
           )}
 
           {/* Mobile/Tablet Only: Hamburger (Placed AFTER Cart) */}
-          <button className={`lg:hidden transition-colors ${scrolled ? 'text-slate-900' : 'text-white'}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button className={`lg:hidden transition-colors ${isScrolled ? 'text-slate-900' : 'text-white'}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
@@ -176,25 +178,25 @@ export const Navbar = () => {
             animate={{ opacity: 1, height: 'auto', y: 0 }}
             exit={{ opacity: 0, height: 0, y: -10 }}
             className={`mx-4 md:mx-6 mt-2 rounded-2xl overflow-hidden border ${
-              scrolled ? 'bg-white border-gray-200 shadow-xl' : 'bg-slate-900/95 backdrop-blur-3xl border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.5)]'
+              isScrolled ? 'bg-white border-gray-200 shadow-xl' : 'bg-slate-900/95 backdrop-blur-3xl border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.5)]'
             }`}
           >
-            <div className={`flex flex-col px-6 py-6 gap-6 font-bold ${scrolled ? 'text-slate-600' : 'text-slate-200'}`}>
-              <Link to="/products" onClick={() => setMobileMenuOpen(false)} className={`text-lg ${scrolled ? 'hover:text-ewarn-dark' : 'hover:text-white'}`}>Products</Link>
-              <Link to="/about" onClick={() => setMobileMenuOpen(false)} className={`text-lg ${scrolled ? 'hover:text-ewarn-dark' : 'hover:text-white'}`}>About Us</Link>
-              <Link to="/testimonials" onClick={() => setMobileMenuOpen(false)} className={`text-lg ${scrolled ? 'hover:text-ewarn-dark' : 'hover:text-white'}`}>Testimonials</Link>
-              <Link to="/services" onClick={() => setMobileMenuOpen(false)} className={`text-lg ${scrolled ? 'hover:text-ewarn-dark' : 'hover:text-white'}`}>Services</Link>
+            <div className={`flex flex-col px-6 py-6 gap-6 font-bold ${isScrolled ? 'text-slate-600' : 'text-slate-200'}`}>
+              <Link to="/products" onClick={() => setMobileMenuOpen(false)} className={`text-lg ${isScrolled ? 'hover:text-ewarn-dark' : 'hover:text-white'}`}>Products</Link>
+              <Link to="/about" onClick={() => setMobileMenuOpen(false)} className={`text-lg ${isScrolled ? 'hover:text-ewarn-dark' : 'hover:text-white'}`}>About Us</Link>
+              <Link to="/testimonials" onClick={() => setMobileMenuOpen(false)} className={`text-lg ${isScrolled ? 'hover:text-ewarn-dark' : 'hover:text-white'}`}>Testimonials</Link>
+              <Link to="/services" onClick={() => setMobileMenuOpen(false)} className={`text-lg ${isScrolled ? 'hover:text-ewarn-dark' : 'hover:text-white'}`}>Services</Link>
               
-              <div className={`h-px w-full ${scrolled ? 'bg-gray-100' : 'bg-white/10'} my-2`}></div>
+              <div className={`h-px w-full ${isScrolled ? 'bg-gray-100' : 'bg-white/10'} my-2`}></div>
               
               <div className="flex flex-col gap-4">
                 {isAuthenticated ? (
                   <>
-                    <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className={`w-full text-center py-3 text-xs font-mono font-bold tracking-widest uppercase hover:underline ${scrolled ? 'text-slate-600' : 'text-cyan-400'}`}>
+                    <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className={`w-full text-center py-3 text-xs font-mono font-bold tracking-widest uppercase hover:underline ${isScrolled ? 'text-slate-600' : 'text-cyan-400'}`}>
                       PROFILE: {user?.email}
                     </Link>
                     <button onClick={() => { logout(); setMobileMenuOpen(false); }} className={`w-full text-center py-3 rounded-lg border transition-colors font-bold ${
-                      scrolled ? 'border-red-200 text-red-600 hover:bg-red-50' : 'border-red-500/50 text-red-400 hover:bg-red-500/10'
+                      isScrolled ? 'border-red-200 text-red-600 hover:bg-red-50' : 'border-red-500/50 text-red-400 hover:bg-red-500/10'
                     }`}>
                       Logout
                     </button>
@@ -202,7 +204,7 @@ export const Navbar = () => {
                 ) : (
                   <>
                     <Link to="/login" onClick={() => setMobileMenuOpen(false)} className={`w-full text-center py-3 rounded-lg border transition-colors font-bold ${
-                      scrolled ? 'border-gray-200 text-gray-600 hover:bg-gray-50' : 'border-white/20 text-white hover:bg-white/10'
+                      isScrolled ? 'border-gray-200 text-gray-600 hover:bg-gray-50' : 'border-white/20 text-white hover:bg-white/10'
                     }`}>
                       Login
                     </Link>
