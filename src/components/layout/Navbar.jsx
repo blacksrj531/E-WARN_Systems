@@ -92,9 +92,7 @@ export const Navbar = () => {
             )}
           </AnimatePresence>
 
-          <button 
-            onClick={() => {
-              if (isAuthenticated) navigate('/wishlist');
+          <button id="navbar-wishlist-icon" onClick={() => { if (isAuthenticated) navigate('/wishlist');
               else navigate('/login?redirect=/wishlist');
             }}
             className={`transition-colors relative group cursor-pointer ${isScrolled ? 'text-slate-500 hover:text-ewarn-dark' : 'text-slate-300 hover:text-white'}`}
@@ -300,3 +298,5 @@ export const Navbar = () => {
     </>
   );
 };
+
+

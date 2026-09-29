@@ -17,7 +17,8 @@ export const ProductDetailsPage = () => {
   
   const { isAuthenticated } = useAuth();
   const { addToCart } = useCart();
-  const { addToWishlist } = useWishlist();
+  const { toggleWishlist, wishlistItems } = useWishlist();
+  const isInWishlist = wishlistItems.some(item => item.id === product?.id);
 
   const [activeImage, setActiveImage] = useState(product?.image);
   const [quantity, setQuantity] = useState(1);
@@ -247,11 +248,11 @@ export const ProductDetailsPage = () => {
                 </button>
                 
                 <button 
-                  onClick={() => handleProtectedAction('Wishlist')} 
+                  onClick={(e) => { if (!isAuthenticated) { navigate('/login'); } else { toggleWishlist(product, e); } }} 
                   className="w-16 flex shrink-0 items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all border border-rose-100 hover:border-rose-500 hover:shadow-lg hover:-translate-y-1 group"
                   title="Add to Wishlist"
                 >
-                  <Heart className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                  <Heart className={w-6 h-6 group-hover:scale-110 transition-transform } />
                 </button>
               </div>
 
@@ -667,6 +668,7 @@ export const ProductDetailsPage = () => {
     </div>
   );
 };
+
 
 
 

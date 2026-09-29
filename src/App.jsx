@@ -6,6 +6,7 @@ import { WishlistProvider } from './context/WishlistContext';
 import { Navbar } from './components/layout/Navbar';
 import { CrosshairCursor } from './components/animations/CrosshairCursor';
 import { FlyToCart } from './components/animations/FlyToCart';
+import { FlyToWishlist } from './components/animations/FlyToWishlist';
 import { CartDrawer } from './components/cart/CartDrawer';
 import { HomePage } from './pages/HomePage';
 import { AllProductsPage } from './pages/AllProductsPage';
@@ -49,6 +50,7 @@ function App() {
             <div className="min-h-screen bg-white">
               <CrosshairCursor />
               <FlyToCart />
+              <FlyToWishlist />
               <CartDrawer />
               
               <Navbar />
@@ -83,3 +85,4 @@ function App() {
 }
 
 export default App;
+
