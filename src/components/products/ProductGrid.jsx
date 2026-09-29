@@ -3,24 +3,21 @@ import { ShoppingBag, ArrowUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 
-const PRODUCTS = [
-  { id: 1, name: "ESP32 Development Board", category: "Microprocessors", price: "₹1,099", badge: "Best Seller", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" },
-  { id: 2, name: "Raspberry Pi 5 (8GB)", category: "Single Board Computers", price: "₹8,499", badge: "New", image: "https://images.unsplash.com/photo-1552831388-6a0b3575b32a?auto=format&fit=crop&q=80&w=800" },
-  { id: 3, name: "Arduino Mega 2560", category: "Microcontrollers", price: "₹3,999", badge: "", image: "https://images.unsplash.com/photo-1553406830-ef2513450d76?auto=format&fit=crop&q=80&w=800" },
-  { id: 4, name: "DHT11 Temp/Humidity", category: "Sensors", price: "₹299", badge: "", image: "https://images.unsplash.com/photo-1580983554869-70363292434e?auto=format&fit=crop&q=80&w=800" },
-  { id: 5, name: "0.96 inch OLED Display", category: "Displays", price: "₹599", badge: "Popular", image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800" },
-  { id: 6, name: "Jumper Wires (120pcs)", category: "Accessories", price: "₹349", badge: "", image: "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&q=80&w=800" },
-];
+import { PRODUCTS as DEFAULT_PRODUCTS } from '../../data/products';
 
 export const ProductGrid = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  
+  const allProducts = JSON.parse(localStorage.getItem('ewarn_products')) || DEFAULT_PRODUCTS;
+  const displayProducts = allProducts.slice(0, 6);
+
   return (
     <section className="py-24 bg-white">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
           <div className="max-w-2xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-ewarn-dark mb-4 tracking-tight">Featured Components</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-ewarn-dark mb-4 tracking-tight">Featured Products & Components</h2>
             <p className="text-gray-500 text-lg">Curated electronics for precise engineering.</p>
           </div>
           <a onClick={() => navigate('/products')} className="cursor-pointer hidden md:flex items-center gap-1 text-ewarn-dark font-medium hover:text-gray-500 transition-colors group">
@@ -29,7 +26,7 @@ export const ProductGrid = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
-          {PRODUCTS.map((product, idx) => (
+          {displayProducts.map((product, idx) => (
             <motion.div 
               key={product.id}
               initial={{ opacity: 0, y: 30 }}
