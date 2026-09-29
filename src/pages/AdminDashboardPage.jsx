@@ -318,6 +318,16 @@ const AdminProducts = () => {
             placeholder="e.g. ₹1,099"
           />
         </div>
+        <div>
+          <label className="text-xs font-bold text-slate-500 uppercase">Stock Qty</label>
+          <input 
+            type="number"
+            min="0"
+            value={editForm.stock ?? 10} 
+            onChange={e => setEditForm({...editForm, stock: parseInt(e.target.value) || 0})}
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm mt-1 focus:border-cyan-500 focus:outline-none font-bold text-slate-700" 
+          />
+        </div>
       </div>
 
       {/* Multiple Image Management */}
@@ -511,5 +521,7 @@ const AdminReviews = () => {
     </div>
   );
 };
+
+
 
 
