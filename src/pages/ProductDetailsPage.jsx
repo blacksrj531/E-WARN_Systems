@@ -188,8 +188,8 @@ export const ProductDetailsPage = () => {
               <span className="text-sm text-cyan-600 hover:text-cyan-700 cursor-pointer underline decoration-cyan-200 underline-offset-4">({totalReviews.toLocaleString()} verified ratings)</span>
             </div>
 
-            {/* Pricing Section (Amazon / Flipkart Style) */}{product.stock === 0 ? (<div className="mb-8 pb-8 border-b border-gray-100"><div className="text-3xl font-black text-rose-500 bg-rose-50 px-6 py-4 rounded-xl border border-rose-100 inline-block">OUT OF STOCK</div><p className="text-sm text-gray-500 font-medium mt-3">This item is currently unavailable.</p></div>) : (
-            <div className="mb-8 pb-8 border-b border-gray-100">
+            {/* Pricing Section (Amazon / Flipkart Style) */}
+            <div className={`mb-8 pb-8 border-b border-gray-100 ${product.stock === 0 ? 'opacity-50 grayscale' : ''}`}>
               <div className="flex items-center gap-4 mb-2">
                 {discountPercent > 0 && <span className="text-3xl font-black text-red-500">-{discountPercent}%</span>}
                 <span className="text-4xl font-black text-slate-900">{product.price}</span>
@@ -198,14 +198,16 @@ export const ProductDetailsPage = () => {
                 <div className="text-slate-500 font-bold">
                   M.R.P: <span className="line-through decoration-slate-400">{formattedMrp}</span>
                 </div>
-                <div className="text-xs text-slate-400 font-bold tracking-wide uppercase">Inclusive of all taxes</div></div></div>)}
+                <div className="text-xs text-slate-400 font-bold tracking-wide uppercase">Inclusive of all taxes</div>
+              </div>
+            </div>
             
             <p className="text-gray-500 text-lg leading-relaxed mb-8">
               A high-performance {product.category.toLowerCase()} component perfect for your next electronic prototyping project. Manufactured to the highest standards with strict quality assurance, this module guarantees precision and reliability within the EWARN ecosystem.
             </p>
 
-            {/* Quantity Selector */}{product.stock !== 0 && (
-            <div className="flex items-center gap-4 mb-10">
+            {/* Quantity Selector */}
+            <div className={`flex items-center gap-4 mb-10 ${product.stock === 0 ? 'opacity-50 grayscale pointer-events-none' : ''}`}>
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Quantity:</span>
               <div className="flex items-center border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
                 <button 
@@ -222,11 +224,17 @@ export const ProductDetailsPage = () => {
                   className="p-3 bg-slate-50 hover:bg-gray-100 text-slate-500 hover:text-cyan-600 transition-colors"
                 >
                   <Plus className="w-4 h-4" />
-                </button></div></div>)}{/* Action Buttons */}<div className="flex flex-col gap-4 mb-10">{product.stock === 0 ? (<button disabled className="w-full bg-gray-200 text-gray-400 py-4 rounded-xl font-black cursor-not-allowed">OUT OF STOCK</button>) : (
+                </button>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-4 mb-10">
               <div className="flex gap-4">
                 <button 
                   onClick={() => handleProtectedAction('Buy Now')} 
-                  className="flex-1 bg-slate-900 hover:bg-black text-white py-4 rounded-xl font-black transition-all shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 flex items-center justify-center gap-3"
+                  disabled={product.stock === 0}
+                  className={`flex-1 text-white py-4 rounded-xl font-black transition-all flex items-center justify-center gap-3 ${product.stock === 0 ? 'bg-slate-300 cursor-not-allowed opacity-50 grayscale' : 'bg-slate-900 hover:bg-black shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1'}`}
                 >
                   <CreditCard className="w-5 h-5" /> BUY NOW
                 </button>
@@ -242,9 +250,12 @@ export const ProductDetailsPage = () => {
 
               <button 
                 onClick={(e) => addToCart(product, quantity, e)}
-                className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 py-4 rounded-xl font-black transition-all shadow-[0_8px_30px_rgba(34,211,238,0.2)] hover:shadow-[0_8px_40px_rgba(34,211,238,0.4)] hover:-translate-y-1 flex items-center justify-center gap-3"
+                disabled={product.stock === 0}
+                className={`w-full py-4 rounded-xl font-black transition-all flex items-center justify-center gap-3 ${product.stock === 0 ? 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-50 grayscale' : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-[0_8px_30px_rgba(34,211,238,0.2)] hover:shadow-[0_8px_40px_rgba(34,211,238,0.4)] hover:-translate-y-1'}`}
               >
-                <ShoppingBag className="w-6 h-6" /> ADD TO CART</button>)}</div>
+                <ShoppingBag className="w-6 h-6" /> {product.stock === 0 ? 'OUT OF STOCK' : 'ADD TO CART'}
+              </button>
+            </div>
 
             {/* Feature Badges */}
             <div className="flex justify-between items-start gap-2 pt-8 border-t border-gray-100">
