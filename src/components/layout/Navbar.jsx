@@ -51,7 +51,7 @@ export const Navbar = () => {
     >
       <nav 
         className={`mx-auto flex justify-between items-center transition-all duration-500 ${
-          scrolled 
+          isScrolled 
             ? 'max-w-full bg-white/95 backdrop-blur-lg border-b border-gray-200 py-3 md:py-4 px-6 md:px-12 lg:px-24 shadow-sm rounded-none' 
             : 'max-w-7xl bg-slate-900/60 backdrop-blur-2xl border border-white/10 py-3 md:py-4 px-4 md:px-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-2xl'
         }`}
