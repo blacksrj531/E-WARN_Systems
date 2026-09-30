@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CreditCard, CheckCircle, Loader2 } from 'lucide-react';
+import { CreditCard, CheckCircle, Loader2, XCircle, ShieldCheck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,13 @@ export const PaymentPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   
+  // Payment Selection State
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState('razorpay');
+  const [upiId, setUpiId] = useState('');
+  const [upiStatus, setUpiStatus] = useState(null);
+  const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '' });
+  
   const totalFinalPrice = cartItems.reduce((sum, item) => {
     const priceNumber = parseInt((item.price || '').replace(/[^\d]/g, '') || '0');
     return sum + (priceNumber * item.quantity);
@@ -26,7 +33,15 @@ export const PaymentPage = () => {
     return requiredFields.every(field => profileData[field] && profileData[field].trim() !== '');
   };
 
-  const handlePayment = () => {
+  const verifyUpi = () => {
+    if (/^[\w.-]+@[\w.-]+$/.test(upiId)) {
+      setUpiStatus('valid');
+    } else {
+      setUpiStatus('invalid');
+    }
+  };
+
+  const handleProceedClick = () => {
     if (cartItems.length === 0) return;
     
     if (!isProfileComplete()) {
@@ -35,11 +50,13 @@ export const PaymentPage = () => {
     }
     
     setErrorMsg("");
+    setShowPaymentOptions(true);
+  };
+
+  const handleFinalPayment = () => {
     setIsProcessing(true);
     
-    // Simulate API network request
     setTimeout(() => {
-      // 1. Generate Order Data
       const orderId = `EW-${Math.floor(100000 + Math.random() * 900000)}`;
       const newOrder = {
         id: orderId,
@@ -50,24 +67,33 @@ export const PaymentPage = () => {
         items: cartItems.length === 1 
           ? cartItems[0].name 
           : `${cartItems[0].name} + ${cartItems.length - 1} others`,
-        cartSnapshot: cartItems // Save full items for details view if needed later
+        cartSnapshot: cartItems,
+        paymentMethod: selectedMethod
       };
 
-      // 2. Save to User's Order History in LocalStorage
       if (user?.email) {
         const history = JSON.parse(localStorage.getItem(`ewarn_orders_${user.email}`) || '[]');
         history.unshift(newOrder);
         localStorage.setItem(`ewarn_orders_${user.email}`, JSON.stringify(history));
       }
 
-      // 3. Clear the shopping cart
       clearCart();
-      
-      // 4. Update UI state
       setIsProcessing(false);
       setIsSuccess(true);
     }, 2000);
   };
+
+  const PAYMENT_METHODS = [
+    { id: 'razorpay', label: 'Razorpay', logo: <span className="text-blue-600 font-bold italic">Razorpay</span> },
+    { id: 'paypal', label: 'PayPal', logo: <span className="text-blue-800 font-black italic">PayPal</span> },
+    { id: 'bhim', label: 'BHIM UPI', logo: <span className="text-orange-600 font-black">BHIM</span> },
+    { id: 'gpay', label: 'Google Pay', logo: <span className="font-bold tracking-tight"><span className="text-blue-500">G</span><span className="text-red-500">P</span><span className="text-yellow-500">a</span><span className="text-green-500">y</span></span> },
+    { id: 'phonepe', label: 'PhonePe', logo: <span className="text-purple-600 font-bold">PhonePe</span> },
+    { id: 'paytm', label: 'Paytm', logo: <span className="text-blue-500 font-black italic">Paytm</span> },
+    { id: 'credit', label: 'Credit Card', logo: <CreditCard className="text-slate-600 w-5 h-5" /> },
+    { id: 'debit', label: 'Debit Card', logo: <CreditCard className="text-slate-600 w-5 h-5" /> },
+    { id: 'custom_upi', label: 'Custom UPI ID', logo: <span className="text-emerald-600 font-bold border border-emerald-200 bg-emerald-50 px-2 py-0.5 rounded text-xs">UPI</span> }
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-16">
@@ -117,18 +143,90 @@ export const PaymentPage = () => {
                 </div>
               )}
 
-              <button 
-                onClick={handlePayment}
-                disabled={isProcessing || cartItems.length === 0}
-                className={`w-full max-w-xs mx-auto font-bold py-4 px-12 rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 ${
-                  isProcessing || cartItems.length === 0 
-                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed shadow-none'
-                    : 'bg-slate-900 hover:bg-black text-white hover:shadow-xl'
-                }`}
-              >
-                {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <CreditCard className="w-5 h-5" />}
-                {isProcessing ? 'PROCESSING...' : 'PAY NOW'}
-              </button>
+              {!showPaymentOptions ? (
+                <div className="flex justify-center mt-6">
+                  <button 
+                    onClick={handleProceedClick}
+                    disabled={cartItems.length === 0}
+                    className={`w-full max-w-xs font-bold py-4 px-12 rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 ${
+                      cartItems.length === 0 
+                        ? 'bg-slate-300 text-slate-500 cursor-not-allowed shadow-none'
+                        : 'bg-slate-900 hover:bg-black text-white hover:shadow-xl'
+                    }`}
+                  >
+                    <CreditCard className="w-5 h-5" />
+                    PAY NOW
+                  </button>
+                </div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="mt-8 text-left border-t border-gray-100 pt-8"
+                >
+                  <h3 className="font-black text-slate-900 mb-6 text-xl">Select Payment Method</h3>
+                  <div className="flex flex-col gap-3 mb-8">
+                    {PAYMENT_METHODS.map(method => (
+                      <div key={method.id} className={`border rounded-xl transition-all ${selectedMethod === method.id ? 'border-cyan-500 bg-cyan-50 shadow-sm' : 'border-gray-200 hover:border-cyan-200 bg-white'}`}>
+                        <label className="flex items-center justify-between cursor-pointer p-4">
+                          <div className="flex items-center gap-3">
+                            <input 
+                              type="radio" 
+                              name="payment_method" 
+                              value={method.id} 
+                              checked={selectedMethod === method.id}
+                              onChange={() => setSelectedMethod(method.id)}
+                              className="w-5 h-5 accent-cyan-500 cursor-pointer"
+                            />
+                            <span className="font-bold text-slate-700">{method.label}</span>
+                          </div>
+                          <div>{method.logo}</div>
+                        </label>
+                        
+                        <AnimatePresence>
+                          {selectedMethod === method.id && (method.id === 'debit' || method.id === 'credit') && (
+                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                              <div className="px-4 pb-4 pt-2 border-t border-cyan-100 grid gap-4">
+                                <input type="text" placeholder="Card Number (e.g. 4111 1111 1111 1111)" className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-cyan-500 font-mono text-sm" value={cardDetails.number} onChange={e => setCardDetails({...cardDetails, number: e.target.value})} />
+                                <div className="grid grid-cols-2 gap-4">
+                                  <input type="text" placeholder="Expiry (MM/YY)" className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-cyan-500 font-mono text-sm" value={cardDetails.expiry} onChange={e => setCardDetails({...cardDetails, expiry: e.target.value})} />
+                                  <input type="text" placeholder="CVV" className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-cyan-500 font-mono text-sm" value={cardDetails.cvv} onChange={e => setCardDetails({...cardDetails, cvv: e.target.value})} />
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+
+                          {selectedMethod === method.id && method.id === 'custom_upi' && (
+                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                              <div className="px-4 pb-4 pt-2 border-t border-cyan-100 flex flex-col sm:flex-row items-center gap-2">
+                                <input type="text" placeholder="Enter UPI ID (e.g. name@okhdfcbank)" className="w-full sm:flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-cyan-500 text-sm" value={upiId} onChange={e => { setUpiId(e.target.value); setUpiStatus(null); }} />
+                                <button onClick={verifyUpi} className="w-full sm:w-auto bg-slate-900 text-white px-5 py-3 rounded-lg font-bold hover:bg-black transition-colors text-sm">Verify</button>
+                                {upiStatus === 'valid' && <CheckCircle className="w-6 h-6 text-emerald-500 shrink-0" />}
+                                {upiStatus === 'invalid' && <XCircle className="w-6 h-6 text-rose-500 shrink-0" />}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-center mt-6">
+                    <button 
+                      onClick={handleFinalPayment}
+                      disabled={isProcessing || (selectedMethod === 'custom_upi' && upiStatus !== 'valid') || ((selectedMethod === 'debit' || selectedMethod === 'credit') && (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv))}
+                      className={`w-full max-w-xs font-bold py-4 px-12 rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 ${
+                        isProcessing || (selectedMethod === 'custom_upi' && upiStatus !== 'valid') || ((selectedMethod === 'debit' || selectedMethod === 'credit') && (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv))
+                          ? 'bg-slate-300 text-slate-500 cursor-not-allowed shadow-none'
+                          : 'bg-emerald-500 hover:bg-emerald-600 text-white hover:shadow-xl hover:-translate-y-1'
+                      }`}
+                    >
+                      {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
+                      {isProcessing ? 'PROCESSING...' : `CONFIRM ₹${totalFinalPrice.toLocaleString('en-IN')}`}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           ) : (
             <motion.div 
