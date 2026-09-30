@@ -87,7 +87,16 @@ export const AuthProvider = ({ children }) => {
     const userExists = registeredUsers.find(u => u.email === email);
     
     if (userExists) {
-      return { success: false, message: 'User already exists.' };
+      if (userExists.password === password) {
+        setIsAuthenticated(true);
+        const isAdmin = email === 'admin@ewarnsystem.com';
+        const userData = { email, isAdmin };
+        setUser(userData);
+        localStorage.setItem('ewarn_user', JSON.stringify(userData));
+        recordLogin(email);
+        return { success: true };
+      }
+      return { success: false, message: 'User already exists. Please use the Login page.' };
     }
     
     registeredUsers.push({ email, password });
@@ -118,3 +127,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+
