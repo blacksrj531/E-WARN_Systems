@@ -234,13 +234,14 @@ export const ProductDetailsPage = () => {
               A high-performance {product.category.toLowerCase()} component perfect for your next electronic prototyping project. Manufactured to the highest standards with strict quality assurance, this module guarantees precision and reliability within the EWARN ecosystem.
             </p>
 
-            {/* Quantity Selector */}
+            {/* Quantity Selector with Stock Cap */}
             <div className={`flex items-center gap-4 mb-10 ${product.stock === 0 ? 'opacity-50 grayscale pointer-events-none' : ''}`}>
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Quantity:</span>
               <div className="flex items-center border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))} 
-                  className="p-3 bg-slate-50 hover:bg-gray-100 text-slate-500 hover:text-cyan-600 transition-colors"
+                  disabled={quantity <= 1}
+                  className="p-3 bg-slate-50 hover:bg-gray-100 text-slate-500 hover:text-cyan-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -248,12 +249,24 @@ export const ProductDetailsPage = () => {
                   {quantity}
                 </div>
                 <button 
-                  onClick={() => setQuantity(quantity + 1)} 
-                  className="p-3 bg-slate-50 hover:bg-gray-100 text-slate-500 hover:text-cyan-600 transition-colors"
+                  onClick={() => {
+                    const maxStock = typeof product.stock === 'number' ? product.stock : 999;
+                    if (quantity < maxStock) {
+                      setQuantity(quantity + 1);
+                    }
+                  }} 
+                  disabled={quantity >= (typeof product.stock === 'number' ? product.stock : 999)}
+                  className="p-3 bg-slate-50 hover:bg-gray-100 text-slate-500 hover:text-cyan-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  title={quantity >= (typeof product.stock === 'number' ? product.stock : 999) ? "Max stock reached" : "Increase quantity"}
                 >
                   <Plus className="w-4 h-4" />
                 </button>
               </div>
+              {typeof product.stock === 'number' && product.stock > 0 && product.stock <= 5 && (
+                <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-md">
+                  Only {product.stock} left in stock!
+                </span>
+              )}
             </div>
 
             {/* Action Buttons */}

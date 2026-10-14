@@ -71,6 +71,21 @@ export const PaymentPage = () => {
         paymentMethod: selectedMethod
       };
 
+      // Deduct purchased stock from localStorage('ewarn_products')
+      const storedProducts = JSON.parse(localStorage.getItem('ewarn_products') || '[]');
+      if (storedProducts.length > 0) {
+        const updatedProducts = storedProducts.map(p => {
+          const purchasedItem = cartItems.find(item => item.id === p.id);
+          if (purchasedItem) {
+            const currentStock = typeof p.stock === 'number' ? p.stock : 10;
+            const newStock = Math.max(0, currentStock - purchasedItem.quantity);
+            return { ...p, stock: newStock };
+          }
+          return p;
+        });
+        localStorage.setItem('ewarn_products', JSON.stringify(updatedProducts));
+      }
+
       if (user?.email) {
         const history = JSON.parse(localStorage.getItem(`ewarn_orders_${user.email}`) || '[]');
         history.unshift(newOrder);

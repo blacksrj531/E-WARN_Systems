@@ -342,7 +342,9 @@ export const CartDrawer = () => {
                                 <span className="font-bold text-sm min-w-[20px] text-center">{item.quantity}</span>
                                 <button 
                                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                  className="w-5 h-5 flex items-center justify-center font-bold hover:bg-gray-200 rounded transition-colors"
+                                  disabled={typeof item.stock === 'number' && item.quantity >= item.stock}
+                                  className="w-5 h-5 flex items-center justify-center font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed rounded transition-colors"
+                                  title={typeof item.stock === 'number' && item.quantity >= item.stock ? "Max stock reached" : "Increase quantity"}
                                 >
                                   +
                                 </button>

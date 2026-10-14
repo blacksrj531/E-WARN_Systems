@@ -12,12 +12,29 @@ export const CartProvider = ({ children }) => {
   const [flyingItems, setFlyingItems] = useState([]);
 
   const addToCart = (product, quantity, event) => {
+    const maxStock = typeof product.stock === 'number' ? product.stock : 999;
+    if (maxStock <= 0) {
+      alert(`Sorry, ${product.name} is currently out of stock.`);
+      return false;
+    }
+
+    let itemExceeded = false;
     setCartItems(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
-        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item);
+        const targetQty = existing.quantity + quantity;
+        if (targetQty > maxStock) {
+          itemExceeded = true;
+          alert(`Cannot add more. You already have ${existing.quantity} in cart and only ${maxStock} are in stock.`);
+          return prev.map(item => item.id === product.id ? { ...item, quantity: maxStock } : item);
+        }
+        return prev.map(item => item.id === product.id ? { ...item, quantity: targetQty } : item);
       }
-      return [...prev, { ...product, quantity }];
+      const initialQty = Math.min(quantity, maxStock);
+      if (quantity > maxStock) {
+        alert(`Only ${maxStock} available in stock. Added maximum available quantity to cart.`);
+      }
+      return [...prev, { ...product, quantity: initialQty }];
     });
 
     if (event) {
@@ -40,7 +57,17 @@ export const CartProvider = ({ children }) => {
 
   const updateQuantity = (productId, newQuantity) => {
     if (newQuantity < 1) return;
-    setCartItems(prev => prev.map(item => item.id === productId ? { ...item, quantity: newQuantity } : item));
+    setCartItems(prev => prev.map(item => {
+      if (item.id === productId) {
+        const maxStock = typeof item.stock === 'number' ? item.stock : 999;
+        if (newQuantity > maxStock) {
+          alert(`Cannot increase quantity. Maximum available stock is ${maxStock}.`);
+          return { ...item, quantity: maxStock };
+        }
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
+    }));
   };
 
   const clearCart = () => {
