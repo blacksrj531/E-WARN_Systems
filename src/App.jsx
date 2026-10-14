@@ -31,10 +31,16 @@ import { PRODUCTS } from './data/products';
 import { INITIAL_REVIEWS } from './data/reviews';
 
 function App() {
-  // Initialize global products and reviews for Admin to edit
+  // Ensure ONLY the new official 18 products exist across the application
   useEffect(() => {
-    if (!localStorage.getItem('ewarn_products')) {
+    const existing = localStorage.getItem('ewarn_products');
+    const CATALOGUE_VERSION = 'v2_official_18';
+    const currentVersion = localStorage.getItem('ewarn_products_version');
+    
+    // If not matching the new 18-product catalogue version, overwrite immediately
+    if (currentVersion !== CATALOGUE_VERSION || !existing) {
       localStorage.setItem('ewarn_products', JSON.stringify(PRODUCTS));
+      localStorage.setItem('ewarn_products_version', CATALOGUE_VERSION);
     }
     if (!localStorage.getItem('ewarn_reviews')) {
       localStorage.setItem('ewarn_reviews', JSON.stringify(INITIAL_REVIEWS));

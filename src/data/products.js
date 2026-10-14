@@ -281,5 +281,4 @@ export const INITIAL_PRODUCTS = [
   }
 ];
 
-const savedProducts = typeof window !== 'undefined' ? localStorage.getItem('ewarn_products') : null;
-export const PRODUCTS = savedProducts ? JSON.parse(savedProducts) : INITIAL_PRODUCTS;
+export const PRODUCTS = INITIAL_PRODUCTS;

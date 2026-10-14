@@ -188,12 +188,9 @@ const AdminOrders = () => {
 // ADMIN PRODUCTS
 // ----------------------------------------------------
 const PRODUCT_CATEGORIES = [
-  "Microprocessors",
-  "Single Board Computers",
-  "Microcontrollers",
+  "IoT Kits",
+  "Optical Communication",
   "Sensors",
-  "Displays",
-  "Accessories",
   "Modules"
 ];
 
