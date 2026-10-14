@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Users, Settings, Activity, FileText, Image, Trash2, Edit3, Save, CheckCircle, Store, MessageSquare, Box, Plus, RotateCcw } from 'lucide-react';
+import { Package, Settings, Activity, FileText, Image, Trash2, Edit3, Save, Store, MessageSquare, Box, Plus, RotateCcw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { INITIAL_PRODUCTS } from '../data/products';
@@ -439,15 +439,24 @@ const AdminProducts = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <h2 className="text-2xl font-black text-slate-900">Manage Products</h2>
-        <button 
-          onClick={startAdding}
-          disabled={editingId === 'new'}
-          className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-4 py-2 rounded-xl flex items-center gap-2 transition-colors disabled:opacity-50"
-        >
-          <Plus className="w-5 h-5" /> Add New Product
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button 
+            onClick={resetToOfficialCatalogue}
+            className="border border-gray-300 hover:bg-gray-50 text-slate-700 font-bold px-4 py-2 rounded-xl flex items-center gap-2 transition-colors text-sm"
+            title="Reset to official 18 products list"
+          >
+            <RotateCcw className="w-4 h-4 text-slate-500" /> Reset to Official 18 Products
+          </button>
+          <button 
+            onClick={startAdding}
+            disabled={editingId === 'new'}
+            className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-4 py-2 rounded-xl flex items-center gap-2 transition-colors disabled:opacity-50"
+          >
+            <Plus className="w-5 h-5" /> Add New Product
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4">

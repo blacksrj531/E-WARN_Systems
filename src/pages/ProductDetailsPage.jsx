@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PRODUCTS } from '../data/products';
-import { ShoppingBag, ArrowLeft, ShieldCheck, Truck, Zap, CreditCard, Heart, Star, Minus, Plus, ChevronDown, Sparkles, ArrowUpRight, Activity, User } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, ShieldCheck, Truck, Zap, CreditCard, Heart, Star, Minus, Plus, ChevronDown, Sparkles, ArrowUpRight, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -116,10 +116,9 @@ export const ProductDetailsPage = () => {
       return;
     }
     if (action === 'Wishlist') {
-      addToWishlist(product);
-      alert(`Added ${product.name} to your Wishlist!`);
+      toggleWishlist(product);
     } else {
-      alert(`Successfully processed ${action} for ${product.name}!`);
+      alert(`Filtering by ${action}!`);
     }
   };
 
