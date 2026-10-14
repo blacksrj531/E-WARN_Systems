@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Users, Settings, Activity, FileText, Image, Trash2, Edit3, Save, CheckCircle, Store, MessageSquare, Box, Plus } from 'lucide-react';
+import { Package, Users, Settings, Activity, FileText, Image, Trash2, Edit3, Save, CheckCircle, Store, MessageSquare, Box, Plus, RotateCcw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { INITIAL_PRODUCTS } from '../data/products';
 
 const ADMIN_TABS = [
   { id: 'dashboard', label: 'Overview', icon: Activity },
@@ -197,7 +198,7 @@ const PRODUCT_CATEGORIES = [
 ];
 
 const AdminProducts = () => {
-  const [products, setProducts] = useState(() => JSON.parse(localStorage.getItem('ewarn_products') || '[]'));
+  const [products, setProducts] = useState(() => JSON.parse(localStorage.getItem('ewarn_products') || 'null') || INITIAL_PRODUCTS);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [newImageUrl, setNewImageUrl] = useState("");
@@ -223,6 +224,13 @@ const AdminProducts = () => {
       description: '',
       specs: ''
     });
+  };
+
+  const resetToOfficialCatalogue = () => {
+    if (window.confirm("Reset product catalogue to the official 18 products (IoT Kits, FSO modules & Sensors)?")) {
+      setProducts(INITIAL_PRODUCTS);
+      localStorage.setItem('ewarn_products', JSON.stringify(INITIAL_PRODUCTS));
+    }
   };
 
   const deleteProduct = (id) => {
