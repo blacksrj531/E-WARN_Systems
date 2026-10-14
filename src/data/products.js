@@ -94,8 +94,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "An opto-isolated multi-channel relay module built for safely controlling high-voltage and high-current AC/DC appliances directly from microcontrollers like Arduino, Raspberry Pi, and ESP32. Comes with status indicator LEDs and transistor drive circuitry for reliable industrial automation.",
-    specs: "Relay Output Rating: AC 250V/10A, DC 30V/10A\nTrigger Signal: 3.3V - 5V Logic (Active Low/High selectable)\nIsolation: Optical Optocoupler Isolation\nTrigger Current: 5mA per channel\nIndicator: Individual Relay Coil Status LEDs + Power Indicator"
+    description: "4-Channel Relay Module designed for safe, optocoupler-isolated switching of high-power AC and DC loads with microcontrollers such as Arduino, ESP32, and Raspberry Pi. Features screw terminals, status LEDs, and a JD-VCC power isolation jumper to keep logic lines protected from inductive back-EMF.",
+    specs: "Coil Voltage: 5 V DC (12 V and 24 V versions exist)\nRelays: SRD-05VDC-SL-C or similar, one per channel\nContact Rating: 10 A at 250 VAC or 30 VDC\nContacts: COM, NO, NC per channel, via screw terminals\nTrigger Logic: Usually active LOW. Some modules are active HIGH\nTrigger Current: About 15–20 mA per channel\nIsolation: Optocoupler, with a JD-VCC jumper to separate relay power from logic power\nIndicators: One LED per channel, plus a power LED\nDesign Note: Some boards need 5 V logic to trigger reliably. Check this when using an ESP32."
   },
   { 
     id: 7, 
@@ -109,8 +109,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1580983554869-70363292434e?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Precision non-contact infrared temperature sensor module based on the Melexis MLX90614 chip. Provides accurate non-invasive temperature readings of objects and humans with medical-grade precision using digital I2C bus communication.",
-    specs: "Target Temperature Range: -70°C to +382.2°C\nAmbient Temperature Range: -40°C to +125°C\nMeasurement Accuracy: ±0.5°C in standard medical range (0°C to 50°C)\nResolution: 0.02°C\nInterface: I2C (SMBus compatible) with 10k pull-up resistors\nOperating Voltage: 3.3V - 5V DC"
+    description: "Infrared non-contact thermometer module powered by Melexis MLX90614. Designed for non-invasive surface and body temperature scanning with high thermal resolution. Communicates directly over digital I2C/SMBus, providing dual temperature readouts for both the targeted surface and ambient sensor environment.",
+    specs: "Supply Voltage: 3.3 V on the bare chip (BAA) or 5 V on regulated breakouts\nInterface: I2C / SMBus (default address 0x5A) and PWM\nObject Temperature Range: −70 to 380 °C\nAmbient Temperature Range: −40 to 125 °C\nAccuracy: About ±0.5 °C over 0–50 °C\nResolution: 0.02 °C\nField of View (FOV): 90° standard, with narrower variants available\nCurrent: About 1.5 mA"
   },
   { 
     id: 8, 
@@ -124,8 +124,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Complete analog pH measurement kit consisting of a glass electrode combination probe with BNC connector and the PH-4502C signal conditioning board. Designed for aquariums, hydroponics, industrial wastewater testing, and smart water quality monitoring stations.",
-    specs: "Measuring pH Range: 0.00 to 14.00 pH\nAccuracy: ±0.1 pH (at 25°C)\nResponse Time: ≤ 1 minute\nSignal Conditioning Board: PH-4502C with BNC connector & calibration trimpots\nOutput: Analog Voltage (0V to 5V)\nWorking Voltage: 5.0V ± 0.2V DC"
+    description: "High-precision analog pH testing module featuring a glass combination electrode probe connected via BNC socket to the PH-4502C signal conditioning amplifier. Suitable for real-time acidity and alkalinity measurement in hydroponics, aquaculture, laboratories, and automated pool monitoring.",
+    specs: "Supply Voltage: 5 V\npH Measurement Range: 0–14 pH\nMeasurement Accuracy: About ±0.1 pH at 25 °C\nSignal Output: Analog, about 2.5 V at pH 7\nProbe Type: BNC connector, glass electrode\nOperating Temperature: 0–80 °C\nResponse Time: About 1 minute\nCalibration: Offset and gain trimmers, using pH 4.0, 7.0 and 9.18 buffer solutions\nMaintenance Note: Keep the probe tip wet when stored."
   },
   { 
     id: 9, 
@@ -139,8 +139,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Analog Total Dissolved Solids (TDS) meter module compatible with Arduino, Raspberry Pi, and ESP32. Accurately determines water cleanliness and dissolved solid concentration in parts per million (ppm) using waterproof electrode probes.",
-    specs: "Measurement Range: 0 to 1000 ppm\nMeasurement Accuracy: ±10% F.S. (at 25°C)\nInput Voltage: 3.3V to 5.5V DC\nOutput Signal: Analog 0V to 2.3V\nProbe Type: Waterproof 2-needle TDS immersion probe\nProbe Cable Length: 60 cm"
+    description: "Analog Total Dissolved Solids (TDS) meter for testing water purity and cleanliness. Utilizes an AC excitation signal on the probe needles to minimize polarization resistance, producing a stable analog voltage proportional to dissolved ionic conductivity in parts per million (ppm).",
+    specs: "Supply Voltage: 3.3–5.5 V\nOutput Signal: Analog, 0–2.3 V\nMeasurement Range: 0–1000 ppm\nAccuracy: About ±10 % of full scale at 25 °C\nCurrent: 3–6 mA\nProbe Construction: Waterproof two-electrode probe with an AC excitation signal (reduces electrode polarization)\nUsage Note: Needs temperature compensation for accurate readings."
   },
   { 
     id: 10, 
@@ -154,8 +154,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Optical turbidity sensor module designed to measure water particulate suspension and haze by detecting light transmittance. Perfect for washing machine efficiency sensors, river monitoring, and domestic water filtration testers.",
-    specs: "Operating Voltage: 5.0V DC\nOperating Current: 40mA (MAX)\nResponse Time: < 500ms\nMeasurement Range: 0 to 4500 NTU\nOutput Modes: Analog output (0V - 4.5V) and Digital threshold output\nOperating Temperature: 5°C to 90°C"
+    description: "Water turbidity detection sensor designed to monitor suspended particulates, silt, and cloudiness in liquid solutions using optical light scattering. Provides both linear analog outputs for precise micro-NTU calculations and a potentiometer-tuned digital threshold output for trigger events.",
+    specs: "Supply Voltage: 5 V DC\nCurrent: About 30 mA\nOutputs: Analog 0–4.5 V and a digital threshold output\nResponse Time: Under 500 ms\nOperating Temperature: 5–90 °C\nMeasurement Principle: An IR LED and phototransistor measure light scattering. Clearer water gives a higher voltage, around 4.2 V in clean water\nWaterproofing Note: Only the probe is waterproof, so keep the connector end dry."
   },
   { 
     id: 11, 
@@ -169,8 +169,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Compact infrared obstacle avoidance and proximity detection module. Emits modulated IR light through a transmitter diode and listens for reflections using a receiver diode with an onboard LM393 comparator and distance adjustment potentiometer.",
-    specs: "Detection Distance: 2cm to 30cm (Adjustable via trimmer potentiometer)\nDetection Angle: 35° cone\nOperating Voltage: 3.3V to 5V DC\nComparator IC: LM393 High-Precision Differential Comparator\nOutput Format: Digital Active LOW signal when obstacle is detected"
+    description: "Compact infrared reflective proximity and obstacle avoidance sensor. Features an IR emitter and detector pair coupled with an LM393 comparator chip. Detection distance is smoothly tuned with a multi-turn trimmer, triggering an active LOW digital signal and indicator LED upon obstacle encounter.",
+    specs: "Supply Voltage: 3.3–5 V\nDetection Range: About 2–30 cm, adjustable with the potentiometer\nDetection Angle: About 35°\nComparator IC: LM393\nOutput Signal: Digital, active LOW when an obstacle is detected\nCurrent: About 20 mA\nIndicators: Power and output LEDs\nOperational Note: Detection range depends on the reflectivity of the surface. Dark surfaces reduce range, and sunlight causes interference."
   },
   { 
     id: 12, 
@@ -185,8 +185,8 @@ export const INITIAL_PRODUCTS = [
       "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800",
       "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "The gold standard ultrasonic distance measurement sensor for robotics and distance mapping. Emits 40kHz sonic bursts and calculates target distance with millimeter accuracy based on the time-of-flight echo return signal.",
-    specs: "Operating Voltage: 5V DC\nOperating Current: 15mA\nRanging Distance: 2cm to 400cm (Accuracy: ±3mm)\nMeasuring Angle: 15 degrees\nTrigger Input Pulse: 10µs TTL pulse\nEcho Output: TTL signal proportional to obstacle distance"
+    description: "Popular ultrasonic non-contact ranging sensor for robots, water tank level gauges, and proximity alarms. Transmits 40 kHz sound waves through dual sonic transducers and produces an echo pulse whose duration correlates directly to target distance with millimeter resolution.",
+    specs: "Supply Voltage: 5 V DC\nCurrent: About 15 mA\nOperating Frequency: 40 kHz\nDistance Range: 2–400 cm\nAccuracy: About 3 mm\nMeasuring Angle: About 15°\nTrigger Signal: 10 µs HIGH pulse\nOutput: Echo pulse width proportional to distance\nPinout: VCC, TRIG, ECHO, GND\nVoltage Level Note: The ECHO pin outputs 5 V, so use a voltage divider with a 3.3 V ESP32."
   },
   { 
     id: 13, 
@@ -200,8 +200,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1580983554869-70363292434e?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Passive Infrared (PIR) body motion detector module with a Fresnel lens. Detects the natural infrared radiation emitted by humans and animals, making it ideal for burglar alarms, smart automated lighting, and energy-saving rooms.",
-    specs: "Operating Voltage: 4.5V to 20V DC\nQuiescent Current: < 50µA\nOutput Voltage: 3.3V High / 0V Low\nDetection Range: Up to 7 meters (Adjustable via potentiometer)\nDelay Time: 0.3 seconds to 5 minutes (Adjustable)\nTrigger Mode: Repeatable / Non-repeatable jumper selectable"
+    description: "Pyroelectric infrared human body motion detector module based on the BISS0001 IC and a wide-angle segmented Fresnel lens. Features dual potentiometers for sensitivity and delay adjustments, along with a hardware jumper to toggle between single and repeatable trigger modes.",
+    specs: "Supply Voltage: 4.5–20 V DC\nQuiescent Current: Under 60 µA\nOutput Voltage: 3.3 V HIGH when motion is detected\nDetection Range: 3–7 m, adjustable\nDetection Angle: Under 120°\nDelay Time: 0.3 s to about 200 s, adjustable\nBlock Time: About 2.5 s\nTrigger Modes: Single or repeatable, set with a jumper\nOperating Temperature: −15 to 70 °C\nWarm-up Note: Needs 30–60 s of warm-up after power-on."
   },
   { 
     id: 14, 
@@ -215,8 +215,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Industrial electrochemical metal-oxide gas sensor module series (MQ-2, MQ-3, MQ-7, MQ-135) for detecting combustible gases, smoke, alcohol vapor, carbon monoxide, and air quality index levels in home and industrial environments.",
-    specs: "Target Gases: LPG, Smoke, CO, Methane, Ammonia, Alcohol\nOperating Voltage: 5.0V ± 0.1V DC\nHeater Voltage: 5.0V AC/DC\nSensitivity: Adjustable via onboard precision potentiometer\nOutput: Dual Output (Analog voltage 0-5V + Digital TTL threshold)"
+    description: "Versatile tin-dioxide (SnO2) heated semiconductor electrochemical gas sensor series. Changes internal resistance in the presence of combustible gases, smoke, carbon monoxide, or volatile organic compounds. Includes onboard LM393 comparator for digital alarm triggering plus an analog raw reading pin.",
+    specs: "Sensing Principle: Heated SnO2 semiconductor sensing element\nHeater Voltage: 5 V ± 0.1 V\nHeater Current: About 150 mA, roughly 800 mW\nOutputs: Analog and digital (LM393 threshold) on the module\nOperating Conditions: −20 to 50 °C, below 95 % RH\nPreheat Duration: 24–48 hours initially, then a few minutes before each use\nCalibration: Each type needs calibration in clean air to find its R0 value\nCommon Models:\n• Model MQ-2: Detects LPG, propane, hydrogen, smoke; Typical range: 200–10000 ppm\n• Model MQ-7: Detects Carbon monoxide; Typical range: 10–500 ppm (Needs a heater cycle of 5 V and 1.4 V for best CO sensing)\n• Model MQ-136: Detects Air quality: NH3, benzene, alcohol, CO2; Typical range: 10–1000 ppm\nIdentification: The model number is printed directly on the sensor metal can."
   },
   { 
     id: 15, 
@@ -230,8 +230,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Industrial soil and ambient digital temperature/humidity sensor probe encapsulated in a weatherproof sintered copper housing. Features calibrated digital 2-wire serial output with excellent long-term stability and dew-point calculation capabilities.",
-    specs: "Humidity Measuring Range: 0 to 100% RH (Accuracy: ±4.5% RH)\nTemperature Measuring Range: -40°C to +123.8°C (Accuracy: ±0.5°C)\nOperating Voltage: 3.0V to 5.5V DC\nInterface: 2-Wire Digital Serial (Clock & Data)\nEnclosure: Weatherproof Sintered Filter Shield for soil moisture and harsh conditions"
+    description: "Digital relative humidity and temperature sensor probe manufactured by Sensirion. Features calibrated CMOSens technology for high accuracy, seamless dew-point computation, and long-term durability in outdoor monitoring, greenhouse climate control, and soil condition analysis.",
+    specs: "Manufacturer: Sensirion\nSupply Voltage: 2.4–5.5 V\nInterface: Digital two-wire serial (DATA and SCK). It is not I2C compatible.\nHumidity Range: 0–100 % RH\nHumidity Accuracy: ±4.5 % RH\nHumidity Resolution: 0.05 % RH (12-bit)\nTemperature Range: −40 to 123.8 °C\nTemperature Accuracy: ±0.5 °C at 25 °C\nTemperature Resolution: 0.01 °C (14-bit)\nCurrent: About 550 µA while measuring, 0.3 µA in sleep\nForm Factor Note: Often sold as a probe with a protective filter cap."
   },
   { 
     id: 16, 
@@ -245,8 +245,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1552831388-6a0b3575b32a?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Single-lead electrocardiogram (ECG) heart rate monitoring sensor based on Analog Devices AD8232 front-end IC. Extracts, amplifies, and filters biopotential electrical cardiac signals in the presence of noisy muscle motion artifacts. Includes 3-lead biomedical electrode cable set.",
-    specs: "Operating Voltage: 2.0V to 3.5V DC (Nominal 3.3V)\nOutput: Analog signal corresponding to cardiac voltage wave\nFeatures: Leads-Off Detection, Integrated 2-pole High-Pass Filter, Right Leg Drive (RLD)\nLead Connectors: 3.5mm Jack with 3 Biomedical snap electrode pads\nForm Factor: Ultra-compact wearable prototyping board"
+    description: "Integrated analog front-end biopotential heart-rate monitoring module based on the Analog Devices AD8232 chip. Extracts and conditions weak cardiac electrical signals while rejecting noise and motion artifacts. Comes complete with a 3-lead biomedical electrode cable and snap connectors for educational and maker health wearables.",
+    specs: "Supply Voltage: 3.3 V (chip range 2.0–3.5 V)\nSensor Type: Single-lead heart-rate monitor front end\nSystem Gain: 100\nFiltering: High-pass at about 0.5 Hz and low-pass at about 40 Hz\nCMRR: 80 dB\nOutput Format: Analog voltage signal\nPinout: GND, 3.3V, OUTPUT, LO−, LO+, SDN\nLeads-Off Detection: LO+ and LO− pins\nElectrode Interface: 3.5 mm jack with a 3-lead cable\nCurrent: About 170 µA\nSafety & Power Note: For learning and hobby use, not for medical diagnosis. Battery power gives cleaner signals."
   },
   { 
     id: 17, 
@@ -260,8 +260,8 @@ export const INITIAL_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1553406830-ef2513450d76?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Waterproof stainless-steel probe 1-Wire digital temperature sensor based on Maxim DS18B20. Multiple DS18B20 sensors can share the same single digital microcontroller pin with unique 64-bit ROM addresses for distributed temperature monitoring.",
-    specs: "Operating Voltage: 3.0V to 5.5V DC (Supports Parasitic Power mode)\nTemperature Range: -55°C to +125°C\nMeasurement Accuracy: ±0.5°C (from -10°C to +85°C)\nResolution: 9-bit to 12-bit user configurable\nCommunication: 1-Wire Protocol (Only 1 data pin required)\nCable: 1 Meter Waterproof Stainless Steel Probe"
+    description: "Maxim Dallas DS18B20 high-accuracy digital thermometer encapsulated in a waterproof stainless steel probe with flexible cable. Utilizes the 1-Wire protocol where multiple sensors share a single microcontroller data pin, each identified by an indelible factory-lasered 64-bit ROM code.",
+    specs: "Supply Voltage: 3.0–5.5 V\nInterface: 1-Wire, with a 4.7 kΩ pull-up resistor on the data line\nTemperature Range: −55 to +125 °C\nAccuracy: ±0.5 °C from −10 to +85 °C\nResolution: Programmable 9 to 12 bit (0.5 °C down to 0.0625 °C)\nConversion Time: Up to 750 ms at 12-bit\nUnique ID: Each sensor has a 64-bit ROM code, so many can share one wire\nFeatures: User-defined non-volatile alarm thresholds and parasitic power mode\nPackage: TO-92, or a waterproof stainless-steel probe with a cable"
   },
   { 
     id: 18, 
@@ -276,8 +276,8 @@ export const INITIAL_PRODUCTS = [
       "https://images.unsplash.com/photo-1580983554869-70363292434e?auto=format&fit=crop&q=80&w=800",
       "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&q=80&w=800"
     ],
-    description: "Basic low-cost digital temperature and relative humidity sensor. Features a resistive humidity component and an NTC temperature sensor connected to an 8-bit microcontroller to output calibrated single-bus digital signals.",
-    specs: "Operating Voltage: 3.3V to 5.5V DC\nHumidity Range: 20% to 90% RH (Accuracy: ±5% RH)\nTemperature Range: 0°C to 50°C (Accuracy: ±2°C)\nSampling Rate: 1 Hz (1 reading every second)\nSignal Output: 1-Wire Single-bus Digital Interface"
+    description: "Compact digital temperature and relative humidity composite sensor with pre-calibrated digital signal output. Integrates a resistive-type humidity component and an NTC temperature testing element connected to an onboard 8-bit microcontroller for fast, noise-resistant readings.",
+    specs: "Supply Voltage: 3–5.5 V\nInterface: Proprietary single-wire digital\nHumidity Range: 20–90 % RH, accuracy ±5 %\nTemperature Range: 0–50 °C, accuracy ±2 °C\nResolution: 1 % RH and 1 °C"
   }
 ];
 
