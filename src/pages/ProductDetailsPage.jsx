@@ -296,32 +296,66 @@ export const ProductDetailsPage = () => {
               </div>
             </div>
 
-            {/* Full Product Details Section */}
-            <div className="mt-10 pt-8 border-t border-gray-100">
-              <h3 className="text-sm font-black text-slate-900 mb-4 uppercase tracking-widest">Full Product Details</h3>
-              <div className="text-slate-500 text-sm leading-relaxed">
-                {(() => {
-                  const fullDetails = `The ${product.name} is an advanced industrial-grade component designed for engineers and hobbyists alike. It offers unparalleled performance in its class, ensuring your prototypes run smoothly under all conditions. Built with high-grade materials, this module supports a wide range of input voltages and interfaces seamlessly with the entire EWARN ecosystem. Perfect for IoT applications, advanced robotics, AI processing, and smart home automation projects where absolute precision and reliability are critical. Detailed schematics, integration guides, and datasheets are included in the package.`;
-                  const words = fullDetails.split(' ');
-                  const isLong = words.length > 25;
-                  
-                  if (!isLong) return fullDetails;
-                  
-                  return (
-                    <>
-                      {detailsExpanded ? fullDetails : words.slice(0, 25).join(' ') + '...'}
-                      <div className="mt-3">
-                        <button 
-                          onClick={() => setDetailsExpanded(!detailsExpanded)}
-                          className="text-cyan-600 font-bold text-xs hover:text-cyan-700 uppercase tracking-widest transition-colors inline-block"
-                        >
-                          {detailsExpanded ? 'READ LESS' : 'READ MORE'}
-                        </button>
-                      </div>
-                    </>
-                  );
-                })()}
+            {/* Full Product Details & Technical Specifications Section */}
+            <div className="mt-10 pt-8 border-t border-gray-100 space-y-6">
+              <div>
+                <h3 className="text-sm font-black text-slate-900 mb-3 uppercase tracking-widest">Product Details</h3>
+                <div className="text-slate-600 text-sm leading-relaxed whitespace-pre-line">
+                  {(() => {
+                    const fullDetails = product.description && product.description.trim() !== ''
+                      ? product.description
+                      : `The ${product.name} is an advanced industrial-grade component designed for engineers and hobbyists alike. It offers unparalleled performance in its class, ensuring your prototypes run smoothly under all conditions. Built with high-grade materials, this module supports a wide range of input voltages and interfaces seamlessly with the entire EWARN ecosystem. Perfect for IoT applications, advanced robotics, AI processing, and smart home automation projects where absolute precision and reliability are critical. Detailed schematics, integration guides, and datasheets are included in the package.`;
+                    
+                    const words = fullDetails.split(' ');
+                    const isLong = words.length > 30;
+                    
+                    if (!isLong) return fullDetails;
+                    
+                    return (
+                      <>
+                        {detailsExpanded ? fullDetails : words.slice(0, 30).join(' ') + '...'}
+                        <div className="mt-3">
+                          <button 
+                            onClick={() => setDetailsExpanded(!detailsExpanded)}
+                            className="text-cyan-600 font-bold text-xs hover:text-cyan-700 uppercase tracking-widest transition-colors inline-flex items-center gap-1 border border-cyan-200 bg-cyan-50/50 hover:bg-cyan-50 px-3 py-1.5 rounded-lg"
+                          >
+                            {detailsExpanded ? 'READ LESS ▲' : 'READ MORE ▼'}
+                          </button>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
               </div>
+
+              {/* Technical Specifications */}
+              {product.specs && product.specs.trim() !== '' && (
+                <div className="pt-6 border-t border-gray-100">
+                  <h3 className="text-sm font-black text-slate-900 mb-3 uppercase tracking-widest">
+                    Technical Specifications
+                  </h3>
+                  <div className="bg-slate-50 border border-gray-200/80 rounded-xl p-4 overflow-hidden">
+                    <div className="grid grid-cols-1 gap-2 text-xs md:text-sm">
+                      {product.specs.split('\n').filter(line => line.trim()).map((line, idx) => {
+                        const parts = line.split(':');
+                        if (parts.length > 1) {
+                          return (
+                            <div key={idx} className="flex flex-col sm:flex-row sm:items-center py-1.5 border-b border-gray-200/50 last:border-b-0 gap-1 sm:gap-4">
+                              <span className="font-bold text-slate-800 sm:w-1/3 shrink-0">{parts[0].trim()}</span>
+                              <span className="text-slate-600 sm:w-2/3 font-mono">{parts.slice(1).join(':').trim()}</span>
+                            </div>
+                          );
+                        }
+                        return (
+                          <div key={idx} className="py-1 text-slate-700 font-mono">
+                            • {line.trim()}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
           </motion.div>

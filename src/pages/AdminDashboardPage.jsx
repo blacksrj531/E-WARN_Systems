@@ -205,7 +205,7 @@ const AdminProducts = () => {
   const startEditing = (p) => {
     setEditingId(p.id);
     const images = p.images && p.images.length > 0 ? [...p.images] : [p.image].filter(Boolean);
-    setEditForm({ ...p, images });
+    setEditForm({ ...p, images, description: p.description || '', specs: p.specs || '' });
   };
 
   const startAdding = () => {
@@ -219,7 +219,9 @@ const AdminProducts = () => {
       stock: 10,
       image: '',
       images: [],
-      badge: ''
+      badge: '',
+      description: '',
+      specs: ''
     });
   };
 
@@ -326,6 +328,34 @@ const AdminProducts = () => {
             value={editForm.stock ?? 10} 
             onChange={e => setEditForm({...editForm, stock: parseInt(e.target.value) || 0})}
             className="w-full border border-gray-300 rounded px-3 py-2 text-sm mt-1 focus:border-cyan-500 focus:outline-none font-bold text-slate-700" style={{ WebkitAppearance: 'auto', MozAppearance: 'auto', appearance: 'auto' }} />
+        </div>
+      </div>
+
+      {/* Product Details & Specifications */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1.5 mb-1">
+            <FileText className="w-4 h-4 text-cyan-600" /> Product Details / Description
+          </label>
+          <textarea
+            rows={5}
+            value={editForm.description || ''}
+            onChange={e => setEditForm({...editForm, description: e.target.value})}
+            placeholder="Enter detailed product description... (If long, users will see a Read More toggle on the product page)"
+            className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:border-cyan-500 focus:outline-none resize-y"
+          />
+        </div>
+        <div>
+          <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1.5 mb-1">
+            <Settings className="w-4 h-4 text-cyan-600" /> Technical Specifications
+          </label>
+          <textarea
+            rows={5}
+            value={editForm.specs || ''}
+            onChange={e => setEditForm({...editForm, specs: e.target.value})}
+            placeholder={"e.g.:\nOperating Voltage: 3.3V - 5V\nMicrocontroller: Dual-core Xtensa 32-bit LX6\nFlash Memory: 4MB"}
+            className="w-full border border-gray-300 rounded-lg p-3 text-sm font-mono focus:border-cyan-500 focus:outline-none resize-y"
+          />
         </div>
       </div>
 
