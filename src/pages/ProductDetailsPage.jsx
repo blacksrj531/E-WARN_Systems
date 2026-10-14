@@ -337,18 +337,29 @@ export const ProductDetailsPage = () => {
                   <div className="bg-slate-50 border border-gray-200/80 rounded-xl p-4 overflow-hidden">
                     <div className="grid grid-cols-1 gap-2 text-xs md:text-sm">
                       {product.specs.split('\n').filter(line => line.trim()).map((line, idx) => {
-                        const parts = line.split(':');
+                        const trimmed = line.trim();
+                        // Check if section header like [Main Controller Board]
+                        if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+                          return (
+                            <div key={idx} className="pt-3 pb-1 text-xs font-black uppercase tracking-wider text-cyan-600 border-b border-cyan-100 flex items-center gap-1.5 mt-2 first:mt-0">
+                              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
+                              {trimmed.slice(1, -1)}
+                            </div>
+                          );
+                        }
+                        const cleanLine = trimmed.startsWith('•') ? trimmed.slice(1).trim() : trimmed;
+                        const parts = cleanLine.split(':');
                         if (parts.length > 1) {
                           return (
-                            <div key={idx} className="flex flex-col sm:flex-row sm:items-center py-1.5 border-b border-gray-200/50 last:border-b-0 gap-1 sm:gap-4">
-                              <span className="font-bold text-slate-800 sm:w-1/3 shrink-0">{parts[0].trim()}</span>
-                              <span className="text-slate-600 sm:w-2/3 font-mono">{parts.slice(1).join(':').trim()}</span>
+                            <div key={idx} className="flex flex-col sm:flex-row sm:items-baseline py-1.5 border-b border-gray-200/50 last:border-b-0 gap-1 sm:gap-4">
+                              <span className="font-bold text-slate-800 sm:w-2/5 shrink-0 text-xs md:text-sm">{parts[0].trim()}</span>
+                              <span className="text-slate-600 sm:w-3/5 font-mono text-xs md:text-sm">{parts.slice(1).join(':').trim()}</span>
                             </div>
                           );
                         }
                         return (
-                          <div key={idx} className="py-1 text-slate-700 font-mono">
-                            • {line.trim()}
+                          <div key={idx} className="py-1 text-slate-700 font-mono text-xs md:text-sm">
+                            • {trimmed}
                           </div>
                         );
                       })}
