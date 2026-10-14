@@ -34,7 +34,7 @@ function App() {
   // Ensure ONLY the new official 18 products exist across the application
   useEffect(() => {
     const existing = localStorage.getItem('ewarn_products');
-    const CATALOGUE_VERSION = 'v8_vlc_fso_hybrid_specs';
+    const CATALOGUE_VERSION = 'v9_authentic_kit_photos';
     const currentVersion = localStorage.getItem('ewarn_products_version');
     
     // If not matching the new 18-product catalogue version, overwrite immediately
