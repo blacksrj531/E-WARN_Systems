@@ -34,7 +34,7 @@ function App() {
   // Ensure ONLY the new official 18 products exist across the application
   useEffect(() => {
     const existing = localStorage.getItem('ewarn_products');
-    const CATALOGUE_VERSION = 'v4_esp32_detailed_specs';
+    const CATALOGUE_VERSION = 'v5_pi5_esp32_detailed_specs';
     const currentVersion = localStorage.getItem('ewarn_products_version');
     
     // If not matching the new 18-product catalogue version, overwrite immediately
